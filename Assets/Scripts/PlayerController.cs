@@ -82,6 +82,7 @@ public class PlayerController : MonoBehaviour
         Sneak();
         Move();
         Interact();
+        Keybinds();
     }
 
     private void LateUpdate()
@@ -225,35 +226,49 @@ public class PlayerController : MonoBehaviour
             {
                 if (heldObject != null)
                 {
-                    heldObject.GetComponent<Rigidbody>().useGravity = true;
-                    heldObject = null;
+                    heldObject.GetComponent<Object>().Use(objectHit);
                 }
-                else if (objectHit.CompareTag("Object"))
-                    heldObject = objectHit;
                 
             }
             else if (use2) // Right click
             {
+                // Opening and closing doors
                 if (objectHit.CompareTag("Door"))
                     objectHit.GetComponent<DoorFunction>().PlayerInteract();
+
+                // Pick up on object
+                if (objectHit.CompareTag("Object"))
+                {
+                    if (objectHit.GetComponent<Object>() != null)
+                        heldObject = objectHit;
+                }
             }
 
             Debug.DrawLine(ray.origin, hit.point, Color.red);
         }
         else
         {
-            if (use1) // Left click
-            {
-                if (heldObject != null)
-                {
-                    heldObject.GetComponent<Rigidbody>().useGravity = true;
-                    heldObject = null;
-                }
-            }
+            // When not looking at an object
             Debug.DrawLine(ray.origin, ray.origin + ray.direction * reach, Color.green);
         }
+
         crosshairOff.SetActive(!cast);
         crosshairOn.SetActive(cast);
+    }
+
+    private void Keybinds()
+    {
+        bool drop = input.drop;
+
+        if (drop)
+        {
+            // Drops an object
+            if (heldObject != null)
+            {
+                heldObject.GetComponent<Rigidbody>().useGravity = true;
+                heldObject = null;
+            }
+        }
     }
 
     private void CameraRotation()

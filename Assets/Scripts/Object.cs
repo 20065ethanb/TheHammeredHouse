@@ -8,14 +8,15 @@ public class Object : MonoBehaviour
     private Rigidbody rigidbody;
     public bool isTool;
     public float rechargeTime = 0.5f;
-    public GameObject target;
-    private Target targetScript;
+    public List<GameObject> targets;
+    private List<Target> targetScripts;
 
     // Start is called before the first frame update
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
-        targetScript = target.GetComponent<Target>();
+        foreach (GameObject target in targets)
+            targetScripts.Add(target.GetComponent<Target>());
     }
 
     // Update is called once per frame
@@ -36,6 +37,7 @@ public class Object : MonoBehaviour
 
     public void Use(GameObject objectHit)
     {
-        targetScript.ObjectInteraction(objectHit == target);
+        if (objectHit.GetComponent<Target>() != null)
+            objectHit.GetComponent<Target>().ObjectInteraction(targets.Contains(objectHit));
     }
 }

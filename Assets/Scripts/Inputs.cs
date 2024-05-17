@@ -10,6 +10,7 @@ public class Inputs : MonoBehaviour
 	public bool use2;
 	public bool jump;
 	public bool sneak;
+	public bool drop;
 
 	private InputAction _moveAction;
 	private InputAction _lookAction;
@@ -17,6 +18,7 @@ public class Inputs : MonoBehaviour
 	private InputAction _use2Action;
 	private InputAction _jumpAction;
 	private InputAction _sneakAction;
+	private InputAction _dropAction;
 
 	[Header("Movement Settings")]
 	[SerializeField]
@@ -38,6 +40,7 @@ public class Inputs : MonoBehaviour
 		_use2Action = _playerInput.actions["Use2"];
 		_jumpAction = _playerInput.actions["Jump"];
 		_sneakAction = _playerInput.actions["Sneak"];
+		_dropAction = _playerInput.actions["Drop"];
 	}
 
     private void Update()
@@ -48,6 +51,7 @@ public class Inputs : MonoBehaviour
 		use2 = _use2Action.WasPressedThisFrame();
 		jump = _jumpAction.IsPressed();
 		sneak = _sneakAction.IsPressed();
+		drop = _dropAction.WasPressedThisFrame();
     }
 
 	public bool IsAnalog()

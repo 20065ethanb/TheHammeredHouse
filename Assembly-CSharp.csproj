@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,14 +53,17 @@
     <UnityVersion>2021.2.10f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Assets\Scripts\Object.cs" />
     <Compile Include="Assets\Scripts\DoorFunction.cs" />
     <Compile Include="Assets\Scripts\Target.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Inputs.cs" />
+    <Compile Include="Assets\Free Wood Door Pack\Script\CameraOpenDoor.cs" />
+    <Compile Include="Assets\Free Wood Door Pack\Script\Door.cs" />
+    <Compile Include="Assets\Free Wood Door Pack\Script\FPSController.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Objects\ToolsAsset\README.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
