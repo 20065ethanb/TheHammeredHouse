@@ -3,15 +3,14 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 2.5f;
+    public float walkSpeed = 2.5f;
+    public float sprintSpeed = 5.0f;
     public float rotationSpeed = 1.0f;
     public float speedChangeRate = 10.0f;
 
-    public float jumpHeight = 1.2f;
-    public float gravity = -9.8f;
+    public float stamina = 100.0f;
 
-    public float jumpTimeout = 0.1f;
-    public float fallTimeout = 0.15f;
+    public float gravity = -9.8f;
 
     public float reach = 4f;
     public GameObject heldObject;
@@ -36,10 +35,6 @@ public class PlayerController : MonoBehaviour
     private float rotationVelocity;
     private float verticalVelocity;
     private float terminalVelocity = 53.0f;
-
-    // Timeout deltatime
-    private float jumpTimeoutDelta;
-    private float fallTimeoutDelta;
 
     private PlayerInput playerInput;
     private CharacterController controller;
@@ -70,15 +65,12 @@ public class PlayerController : MonoBehaviour
         Transform canvas = GameObject.Find("Canvas").transform;
         crosshairOff = canvas.Find("Crosshair_Off").gameObject;
         crosshairOn = canvas.Find("Crosshair_On").gameObject;
-
-        // Reset our timeouts on start
-        fallTimeoutDelta = fallTimeout;
     }
 
     private void Update()
     {
         GroundedCheck();
-        JumpAndGravity();
+        Gravity();
         Sneak();
         Move();
         Interact();
@@ -98,41 +90,14 @@ public class PlayerController : MonoBehaviour
         grounded = Physics.CheckSphere(spherePosition, groundedRadius, groundLayers, QueryTriggerInteraction.Ignore);
     }
 
-    private void JumpAndGravity()
+    private void Gravity()
     {
         if (grounded)
         {
-            // Reset the fall timeout timer
-            fallTimeoutDelta = fallTimeout;
-
             // Stop velocity from dropping infinitely when grounded
             if (verticalVelocity < 0.0f)
             {
                 verticalVelocity = -2f;
-            }
-
-            // Jump
-            if (input.jump && jumpTimeoutDelta <= 0.0f)
-            {
-                // The square root of H * -2 * G = how much velocity needed to reach desired height
-                verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
-            }
-
-            // Jump timeout
-            if (jumpTimeoutDelta >= 0.0f)
-            {
-                jumpTimeoutDelta -= Time.deltaTime;
-            }
-        }
-        else
-        {
-            // Reset the jump timeout timer
-            jumpTimeoutDelta = jumpTimeout;
-
-            // Fall timeout
-            if (fallTimeoutDelta >= 0.0f)
-            {
-                fallTimeoutDelta -= Time.deltaTime;
             }
         }
 
@@ -166,10 +131,11 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        Vector2 move = input.move;         
-        
+        Vector2 move = input.move;
+        bool sprint = input.sprint;
+
         // Sets target speed based on move speed
-        float targetSpeed = moveSpeed - (moveSpeed * 0.1f);
+        float targetSpeed = sprint ? sprintSpeed : walkSpeed;
 
         // If there is no input, set the target speed to 0
         if (move == Vector2.zero) targetSpeed = 0.0f;
@@ -227,7 +193,10 @@ public class PlayerController : MonoBehaviour
                 if (heldObject != null)
                     heldObject.GetComponent<Object>().Use(objectHit);
                 else
-                    objectHit.GetComponent<Target>().ObjectInteraction(false);
+                {
+                    if (objectHit != null)
+                        objectHit.GetComponent<Target>().ObjectInteraction(false);
+                }
             }
             else if (use2) // Right click
             {

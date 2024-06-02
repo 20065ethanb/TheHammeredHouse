@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Jump",
+                    "name": "Sprint",
                     "type": "Button",
                     "id": "2074e6fc-3350-4d27-a0ee-a6e105a621dc",
                     "expectedControlType": "Button",
@@ -216,21 +216,21 @@
                 {
                     "name": "",
                     "id": "453a126f-3dd9-4876-9e6e-67526172d831",
-                    "path": "<Keyboard>/space",
+                    "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "Jump",
+                    "action": "Sprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "cf83d4ff-b0bf-456d-bea7-4a1ba1df14cc",
-                    "path": "<Keyboard>/shift",
+                    "id": "9fe17ef2-8b60-40b5-83bb-b15fed703853",
+                    "path": "<Keyboard>/ctrl",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "Sneak",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -238,18 +238,7 @@
                 {
                     "name": "",
                     "id": "2245a5c2-433f-4053-bc4f-480f06106f54",
-                    "path": "<Keyboard>/leftCtrl",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyboardMouse",
-                    "action": "Drop",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "88b5beaf-7062-4c24-9b69-ae8a60479d31",
-                    "path": "<Keyboard>/rightCtrl",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",

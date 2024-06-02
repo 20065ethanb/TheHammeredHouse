@@ -8,7 +8,7 @@ public class Inputs : MonoBehaviour
 	public Vector2 look;
 	public bool use1;
 	public bool use2;
-	public bool jump;
+	public bool sprint;
 	public bool sneak;
 	public bool drop;
 
@@ -16,7 +16,7 @@ public class Inputs : MonoBehaviour
 	private InputAction _lookAction;
 	private InputAction _use1Action;
 	private InputAction _use2Action;
-	private InputAction _jumpAction;
+	private InputAction _sprintAction;
 	private InputAction _sneakAction;
 	private InputAction _dropAction;
 
@@ -38,7 +38,7 @@ public class Inputs : MonoBehaviour
 		_lookAction = _playerInput.actions["Look"];
 		_use1Action = _playerInput.actions["Use1"];
 		_use2Action = _playerInput.actions["Use2"];
-		_jumpAction = _playerInput.actions["Jump"];
+		_sprintAction = _playerInput.actions["Sprint"];
 		_sneakAction = _playerInput.actions["Sneak"];
 		_dropAction = _playerInput.actions["Drop"];
 	}
@@ -49,7 +49,7 @@ public class Inputs : MonoBehaviour
 		look = _lookAction.ReadValue<Vector2>();
 		use1 = _use1Action.WasPressedThisFrame();
 		use2 = _use2Action.WasPressedThisFrame();
-		jump = _jumpAction.IsPressed();
+		sprint = _sprintAction.IsPressed();
 		sneak = _sneakAction.IsPressed();
 		drop = _dropAction.WasPressedThisFrame();
     }
