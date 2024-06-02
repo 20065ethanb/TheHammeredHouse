@@ -225,10 +225,9 @@ public class PlayerController : MonoBehaviour
             if (use1) // Left click
             {
                 if (heldObject != null)
-                {
                     heldObject.GetComponent<Object>().Use(objectHit);
-                }
-                
+                else
+                    objectHit.GetComponent<Target>().ObjectInteraction(false);
             }
             else if (use2) // Right click
             {
@@ -240,7 +239,10 @@ public class PlayerController : MonoBehaviour
                 if (objectHit.CompareTag("Object"))
                 {
                     if (objectHit.GetComponent<Object>() != null)
+                    {
                         heldObject = objectHit;
+                        heldObject.GetComponent<Object>().PickedUp();
+                    }
                 }
             }
 
@@ -266,6 +268,7 @@ public class PlayerController : MonoBehaviour
             if (heldObject != null)
             {
                 heldObject.GetComponent<Rigidbody>().useGravity = true;
+                heldObject.GetComponent<Object>().Dropped();
                 heldObject = null;
             }
         }
@@ -299,7 +302,7 @@ public class PlayerController : MonoBehaviour
         // Positions the held object to infront of the player in to the right
         if (heldObject != null)
         {
-            Vector3 objectPosition = mainCamera.transform.position + ((mainCamera.transform.forward + mainCamera.transform.right) * 0.75f) - (mainCamera.transform.up * 0.125f);
+            Vector3 objectPosition = mainCamera.transform.position + ((mainCamera.transform.forward + mainCamera.transform.right) * 0.5f) - (mainCamera.transform.up * 0.25f);
             heldObject.transform.position = objectPosition;
             heldObject.transform.rotation = mainCamera.transform.rotation;
             heldObject.GetComponent<Rigidbody>().useGravity = false;

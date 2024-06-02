@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
-
     public string incorrectToolMessage = "Wrong Tool";
+    private GameObject canvas;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        canvas = GameObject.Find("Canvas");
     }
 
     // Update is called once per frame
@@ -23,11 +23,11 @@ public class Target : MonoBehaviour
     {
         if (valid)
         {
-            // Do something
+            Destroy(gameObject);
         }
         else
         {
-            // Send incorrect message
+            canvas.GetComponent<UI>().flashMessage(incorrectToolMessage, 2.0f);
         }
     }
 }

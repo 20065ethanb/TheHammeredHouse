@@ -4,19 +4,14 @@ using UnityEngine;
 
 public class Object : MonoBehaviour
 {
-
-    private Rigidbody rigidbody;
     public bool isTool;
-    public float rechargeTime = 0.5f;
+    //public float rechargeTime = 0.5f;
     public List<GameObject> targets;
-    private List<Target> targetScripts;
 
     // Start is called before the first frame update
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
-        foreach (GameObject target in targets)
-            targetScripts.Add(target.GetComponent<Target>());
+
     }
 
     // Update is called once per frame
