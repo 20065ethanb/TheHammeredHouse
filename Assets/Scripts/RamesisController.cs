@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class RamesisController : MonoBehaviour
 {
-    private float walkSpeed = 2.5f;
-    private float runSpeed = 5;
+    private float walkSpeed = 2;
+    private float runSpeed = 4.5f;
 
     private float sightRange = 10;
     private float attackRange = 1.1f;
@@ -54,8 +54,8 @@ public class RamesisController : MonoBehaviour
         // Casts ray towards player
         Ray ray = new(head.transform.position, playerGameObject.transform.position - transform.position);
 
-        // If raycast hits player, tihor can see player
-        // Otherwise it is hitting a tree or a building
+        // If raycast hits player, ramesis can see the player
+        // Otherwise it is another object
         if (Physics.Raycast(ray, out RaycastHit hit, sightRange, ~(1 << 2)))
         {
             if (hit.collider.CompareTag("Player"))

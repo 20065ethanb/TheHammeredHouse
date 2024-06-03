@@ -3,10 +3,13 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    public float sneakSpeed = 1.0f;
     public float walkSpeed = 2.5f;
     public float sprintSpeed = 5.0f;
     public float rotationSpeed = 1.0f;
     public float speedChangeRate = 10.0f;
+
+    public bool sneaking = false;
 
     public float stamina = 100.0f;
 
@@ -111,8 +114,10 @@ public class PlayerController : MonoBehaviour
     private void Sneak()
     {
         bool sneak = input.sneak;
+        if (sneak) sneaking = !sneaking;
+
         float targetY = cinemachineCameraTarget.transform.localPosition.y;
-        if (sneak)
+        if (sneaking)
         {
             if (targetY > sneakingPosition)
                 targetY -= 0.05f;
@@ -134,8 +139,11 @@ public class PlayerController : MonoBehaviour
         Vector2 move = input.move;
         bool sprint = input.sprint;
 
+        // When sprinting you can't sneak
+        if (sneaking && sprint) sneaking = false;
+
         // Sets target speed based on move speed
-        float targetSpeed = sprint ? sprintSpeed : walkSpeed;
+        float targetSpeed = sneaking ? sneakSpeed : (sprint ? sprintSpeed : walkSpeed);
 
         // If there is no input, set the target speed to 0
         if (move == Vector2.zero) targetSpeed = 0.0f;
@@ -194,7 +202,7 @@ public class PlayerController : MonoBehaviour
                     heldObject.GetComponent<Object>().Use(objectHit);
                 else
                 {
-                    if (objectHit != null)
+                    if (objectHit.CompareTag("Object"))
                         objectHit.GetComponent<Target>().ObjectInteraction(false);
                 }
             }
@@ -202,7 +210,7 @@ public class PlayerController : MonoBehaviour
             {
                 // Opening and closing doors
                 if (objectHit.CompareTag("Door"))
-                    objectHit.GetComponent<DoorFunction>().PlayerInteract();
+                    objectHit.GetComponent<Door>().PlayerInteract();
 
                 // Pick up on object
                 if (objectHit.CompareTag("Object"))

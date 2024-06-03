@@ -50,7 +50,7 @@ public class Inputs : MonoBehaviour
 		use1 = _use1Action.WasPressedThisFrame();
 		use2 = _use2Action.WasPressedThisFrame();
 		sprint = _sprintAction.IsPressed();
-		sneak = _sneakAction.IsPressed();
+		sneak = _sneakAction.WasPressedThisFrame();
 		drop = _dropAction.WasPressedThisFrame();
     }
 
