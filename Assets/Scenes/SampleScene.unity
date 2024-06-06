@@ -12778,6 +12778,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   messageText: {fileID: 1695753460}
   messageTime: 0
+  staminaBar: {fileID: 1701514175}
 --- !u!1 &1286055147
 GameObject:
   m_ObjectHideFlags: 0
@@ -20972,7 +20973,8 @@ MonoBehaviour:
   rotationSpeed: 1
   speedChangeRate: 10
   sneaking: 0
-  stamina: 100
+  MAX_STAMINA: 5
+  stamina: 5
   gravity: -9.8
   reach: 2
   heldObject: {fileID: 0}
