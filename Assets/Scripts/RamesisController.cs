@@ -16,11 +16,15 @@ public class RamesisController : MonoBehaviour
     private GameObject playerGameObject;
     private NavMeshAgent agent;
 
+    public GameObject[] doors;
+
     // Start is called before the first frame update
     void Start()
     {
         playerGameObject = GameObject.Find("PlayerCharacter");
         agent = GetComponent<NavMeshAgent>();
+
+        doors = GameObject.FindGameObjectsWithTag("Door");
     }
 
     // Update is called once per frame
@@ -28,11 +32,13 @@ public class RamesisController : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, playerGameObject.transform.position) < attackRange)
         {
+            // Attack player
             agent.speed = 0;
             agent.SetDestination(transform.position);
         }
         else if (CanSeePlayer())
         {
+            // Chasing player
             agent.speed = runSpeed;
             agent.SetDestination(playerGameObject.transform.position);
         }
@@ -45,6 +51,16 @@ public class RamesisController : MonoBehaviour
             else
             {
                 agent.speed = 0;
+            }
+        }
+
+        foreach (GameObject door in doors)
+        {
+            if (Vector3.Distance(transform.position, door.transform.position) < attackRange * 2)
+            {
+                // the door is in range
+                if (!door.GetComponent<Door>().open)
+                    door.GetComponent<Door>().Interact();
             }
         }
     }
