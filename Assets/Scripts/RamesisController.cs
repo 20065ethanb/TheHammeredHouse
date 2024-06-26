@@ -6,10 +6,18 @@ using UnityEngine.AI;
 public class RamesisController : MonoBehaviour
 {
     private float walkSpeed = 2;
-    private float runSpeed = 4.5f;
+    private float runSpeed = 4;
 
     private float sightRange = 10;
     private float attackRange = 1.1f;
+
+    private float angerTime = 30;
+    private float angerTimer = 0;
+
+    private float wonderTime = 2;
+    private float wonderTimer = 0;
+    private Vector3 wonderCentre;
+    private float wonderRange = 0;
 
     public GameObject head;
 
@@ -21,6 +29,7 @@ public class RamesisController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        wonderCentre = transform.position;
         playerGameObject = GameObject.Find("PlayerCharacter");
         agent = GetComponent<NavMeshAgent>();
 
@@ -41,17 +50,28 @@ public class RamesisController : MonoBehaviour
             // Chasing player
             agent.speed = runSpeed;
             agent.SetDestination(playerGameObject.transform.position);
+            wonderCentre = (playerGameObject.transform.position - transform.position) * 2;
+            wonderRange = Vector3.Distance(transform.position, playerGameObject.transform.position);
+            angerTimer = angerTime;
         }
         else
         {
-            if (agent.remainingDistance  > 0.5f)
+            if (agent.remainingDistance > 0.5f)
             {
-                agent.speed = walkSpeed;
+                agent.speed = (angerTimer > 0) ? runSpeed : walkSpeed;
+                wonderTimer = wonderTime;
             }
             else
             {
                 agent.speed = 0;
+                wonderTimer -= Time.deltaTime;
+                if (wonderTimer < 0)
+                {
+                    Vector3 randomOffset = new Vector3((Random.value * 2) - 1, 0, (Random.value * 2) - 1);
+                    agent.SetDestination((randomOffset * wonderRange) + wonderCentre);
+                }
             }
+            angerTimer -= Time.deltaTime;
         }
 
         foreach (GameObject door in doors)

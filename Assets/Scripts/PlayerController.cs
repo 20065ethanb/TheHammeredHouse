@@ -146,12 +146,15 @@ public class PlayerController : MonoBehaviour
         if (sneaking && sprint) sneaking = false;
 
         // If the player is out of stamina, no sprinting
-        if (sprint && stamina <= 0) sprint = false;
+        // If the player is not moving, no sprinting
+        if (sprint && (stamina <= 0 || move == Vector2.zero)) sprint = false;
+
 
         // When the player sprints, stamina decreases
+        // When the player walks, stamina increases slowly
         // When the player stands still, stamina increases
-        if (move != Vector2.zero && sprint) stamina -= Time.deltaTime;
-        else if (move == Vector2.zero && stamina < MAX_STAMINA) stamina += 0.5f * Time.deltaTime;
+        if (sprint) stamina -= Time.deltaTime;
+        else if (stamina < MAX_STAMINA) stamina += ((move != Vector2.zero) ? 0.125f : 0.5f) * Time.deltaTime;
 
         // Sets target speed based on move speed
         float targetSpeed = sneaking ? sneakSpeed : (sprint ? sprintSpeed : walkSpeed);
@@ -213,8 +216,11 @@ public class PlayerController : MonoBehaviour
                     heldObject.GetComponent<Object>().Use(objectHit);
                 else
                 {
-                    if (objectHit.CompareTag("Object"))
-                        objectHit.GetComponent<Target>().ObjectInteraction(false);
+                    if (objectHit != null)
+                    {
+                        if (objectHit.CompareTag("Object"))
+                            objectHit.GetComponent<Target>().ObjectInteraction(false);
+                    }
                 }
             }
             else if (use2) // Right click
