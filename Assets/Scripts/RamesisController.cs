@@ -8,7 +8,7 @@ public class RamesisController : MonoBehaviour
     private float walkSpeed = 2;
     private float runSpeed = 4;
 
-    private float sightRange = 10;
+    private float sightRange = 15;
     private float attackRange = 1.1f;
 
     private float angerTime = 30;
@@ -17,12 +17,18 @@ public class RamesisController : MonoBehaviour
     private float wonderTime = 2;
     private float wonderTimer = 0;
     private Vector3 wonderCentre;
-    private float wonderRange = 0;
+    private float wonderRange = 3;
 
     public GameObject head;
 
     private GameObject playerGameObject;
     private NavMeshAgent agent;
+
+    private float agentUpdateTime = 0.2f;
+    private float agentUpdateTimer = 0;
+    private Vector3 agentTargetPosition;
+
+    public GameObject wonderCentreObject;
 
     public GameObject[] doors;
 
@@ -30,6 +36,8 @@ public class RamesisController : MonoBehaviour
     void Start()
     {
         wonderCentre = transform.position;
+        agentTargetPosition = transform.position;
+
         playerGameObject = GameObject.Find("PlayerCharacter");
         agent = GetComponent<NavMeshAgent>();
 
@@ -43,15 +51,18 @@ public class RamesisController : MonoBehaviour
         {
             // Attack player
             agent.speed = 0;
-            agent.SetDestination(transform.position);
+            agentTargetPosition = transform.position;
         }
         else if (CanSeePlayer())
         {
             // Chasing player
             agent.speed = runSpeed;
-            agent.SetDestination(playerGameObject.transform.position);
-            wonderCentre = (playerGameObject.transform.position - transform.position) * 2;
-            wonderRange = Vector3.Distance(transform.position, playerGameObject.transform.position);
+            agentTargetPosition = playerGameObject.transform.position;
+
+            Vector3 toPlayer = playerGameObject.transform.position - transform.position;
+            wonderCentre = playerGameObject.transform.position + toPlayer.normalized * wonderRange / 2;
+            wonderCentre.y = playerGameObject.transform.position.y;
+
             angerTimer = angerTime;
         }
         else
@@ -64,14 +75,16 @@ public class RamesisController : MonoBehaviour
             else
             {
                 agent.speed = 0;
-                wonderTimer -= Time.deltaTime;
                 if (wonderTimer < 0)
                 {
                     Vector3 randomOffset = new Vector3((Random.value * 2) - 1, 0, (Random.value * 2) - 1);
-                    agent.SetDestination((randomOffset * wonderRange) + wonderCentre);
+                    agentTargetPosition = (randomOffset * wonderRange) + wonderCentre;
                 }
+                else
+                    wonderTimer -= Time.deltaTime;
             }
-            angerTimer -= Time.deltaTime;
+            if (angerTimer > 0)
+                angerTimer -= Time.deltaTime;
         }
 
         foreach (GameObject door in doors)
@@ -83,6 +96,17 @@ public class RamesisController : MonoBehaviour
                     door.GetComponent<Door>().Interact();
             }
         }
+
+        if (agentUpdateTimer < 0)
+        {
+            agent.SetDestination(agentTargetPosition);
+            agentUpdateTimer = agentUpdateTime;
+        }
+        else
+            agentUpdateTimer -= Time.deltaTime;
+
+
+        if (wonderCentreObject != null) wonderCentreObject.transform.position = wonderCentre;
     }
 
     bool CanSeePlayer()

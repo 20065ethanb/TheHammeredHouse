@@ -8,11 +8,13 @@ public class Door : MonoBehaviour
 
     public bool open = false;
     public float smooth = 1.0f;
-    float DoorOpenAngle = -90.0f;
-    float DoorCloseAngle = 0.0f;
+    public float DoorOpenAngle = -90.0f;
+    public float DoorCloseAngle = 0.0f;
 
     public AudioSource asource;
     public AudioClip openDoor, closeDoor;
+
+    public GameObject pairedDoor;
 
     private BoxCollider boxCollider;
     private GameObject canvas;
@@ -27,18 +29,8 @@ public class Door : MonoBehaviour
 
     void Update()
     {
-        if (open)
-        {
-            var target = Quaternion.Euler(0, DoorOpenAngle, 0);
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, target, Time.deltaTime * 5 * smooth);
-
-        }
-        else
-        {
-            var target1 = Quaternion.Euler(0, DoorCloseAngle, 0);
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, target1, Time.deltaTime * 5 * smooth);
-
-        }
+        var target = Quaternion.Euler(0, open ? DoorOpenAngle : DoorCloseAngle, 0);
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, target, Time.deltaTime * 5 * smooth);
     }
 
     public void PlayerInteract()
@@ -56,12 +48,22 @@ public class Door : MonoBehaviour
 
     public void Interact()
     {
+        // If the door is paired toggle that door
+        if (pairedDoor != null) pairedDoor.GetComponent<Door>().SetState(!open);
         // Toggles the door state
-        open = !open;
-        // if the door is open disable the box collider
-        boxCollider.enabled = !open;
-        // Play sound
-        asource.clip = open ? openDoor : closeDoor;
-        asource.Play();
+        SetState(!open);
+    }
+
+    public void SetState(bool state)
+    {
+        if (!(locked || open == state))
+        {
+            open = state;
+            // if the door is open disable the box collider
+            boxCollider.enabled = !open;
+            // Play sound
+            asource.clip = open ? openDoor : closeDoor;
+            asource.Play();
+        }
     }
 }
