@@ -11,13 +11,14 @@ public class RamesisController : MonoBehaviour
     private float sightRange = 15;
     private float attackRange = 1.1f;
 
-    private float angerTime = 30;
-    private float angerTimer = 0;
+    private bool chasing = false;
+    private float roomChecks = 3;
+    private float roomCheck = 0;
 
     private float wonderTime = 2;
     private float wonderTimer = 0;
     private Vector3 wonderCentre;
-    private float wonderRange = 3;
+    private float wonderRange = 0;
 
     public GameObject head;
 
@@ -47,52 +48,83 @@ public class RamesisController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Vector3.Distance(transform.position, playerGameObject.transform.position) < attackRange)
+        if (chasing)
         {
-            // Attack player
-            agent.speed = 0;
-            agentTargetPosition = transform.position;
-        }
-        else if (CanSeePlayer())
-        {
-            // Chasing player
-            agent.speed = runSpeed;
-            agentTargetPosition = playerGameObject.transform.position;
+            float distanceToPlayer = Vector3.Distance(transform.position, playerGameObject.transform.position);
 
-            Vector3 toPlayer = playerGameObject.transform.position - transform.position;
-            wonderCentre = playerGameObject.transform.position + toPlayer.normalized * wonderRange / 2;
-            wonderCentre.y = playerGameObject.transform.position.y;
-
-            angerTimer = angerTime;
-        }
-        else
-        {
-            if (agent.remainingDistance > 0.5f)
+            if (distanceToPlayer < attackRange)
             {
-                agent.speed = (angerTimer > 0) ? runSpeed : walkSpeed;
-                wonderTimer = wonderTime;
+                // Attack player
+                agent.speed = 0;
+                agentTargetPosition = transform.position;
+            }
+            else if (CanSeePlayer())
+            {
+                agent.speed = runSpeed;
+                agentTargetPosition = playerGameObject.transform.position;
+                Vector3 playerVelcocity = playerGameObject.GetComponent<CharacterController>().velocity;
+                wonderCentre = playerGameObject.transform.position + playerVelcocity.normalized * distanceToPlayer;
+                wonderCentre.y = playerGameObject.transform.position.y;
+                wonderRange = distanceToPlayer;
+
+                roomCheck = 0;
             }
             else
             {
-                agent.speed = 0;
-                if (wonderTimer < 0)
+                if (agent.remainingDistance < 0.5f)
                 {
-                    Vector3 randomOffset = new Vector3((Random.value * 2) - 1, 0, (Random.value * 2) - 1);
-                    agentTargetPosition = (randomOffset * wonderRange) + wonderCentre;
+                    if (roomCheck < roomChecks)
+                    {
+                        Vector2 randomOffset = Random.insideUnitCircle;
+                        agentTargetPosition = wonderCentre + new Vector3(randomOffset.x, 0, randomOffset.y) * wonderRange;
+
+                        roomCheck++;
+                    }
+                    else
+                    {
+                        chasing = false;
+                    }
+                }
+            }
+        }
+        else
+        {
+            agent.speed = walkSpeed;
+            if (CanSeePlayer())
+            {
+                chasing = true;
+            }
+            else
+            {
+                if (agent.remainingDistance > 0.5f)
+                {
+                    wonderTimer = wonderTime;
                 }
                 else
-                    wonderTimer -= Time.deltaTime;
+                {
+                    agent.speed = 0;
+                    if (wonderTimer < 0)
+                    {
+                        // Fix this to be smarter
+                        agentTargetPosition = Random.insideUnitSphere * 9;
+                    }
+                    else
+                        wonderTimer -= Time.deltaTime;
+                }
             }
-            if (angerTimer > 0)
-                angerTimer -= Time.deltaTime;
         }
 
         foreach (GameObject door in doors)
         {
-            if (Vector3.Distance(transform.position, door.transform.position) < attackRange * 2)
+            float distanceToDoor = Vector3.Distance(transform.position, door.transform.position);
+            if (distanceToDoor < attackRange * 1.5f)
             {
-                // the door is in range
                 if (!door.GetComponent<Door>().open)
+                    door.GetComponent<Door>().Interact();
+            }
+            else if (distanceToDoor < attackRange * 2)
+            {
+                if (door.GetComponent<Door>().open && !chasing)
                     door.GetComponent<Door>().Interact();
             }
         }

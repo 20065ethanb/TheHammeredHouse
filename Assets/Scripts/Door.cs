@@ -11,7 +11,7 @@ public class Door : MonoBehaviour
     public float DoorOpenAngle = -90.0f;
     public float DoorCloseAngle = 0.0f;
 
-    public AudioSource asource;
+    public AudioSource audioSource;
     public AudioClip openDoor, closeDoor;
 
     public GameObject pairedDoor;
@@ -21,7 +21,7 @@ public class Door : MonoBehaviour
 
     private void Start()
     {
-        asource = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
 
         boxCollider = GetComponent<BoxCollider>();
         canvas = GameObject.Find("Canvas");
@@ -62,8 +62,8 @@ public class Door : MonoBehaviour
             // if the door is open disable the box collider
             boxCollider.enabled = !open;
             // Play sound
-            asource.clip = open ? openDoor : closeDoor;
-            asource.Play();
+            audioSource.clip = open ? openDoor : closeDoor;
+            audioSource.Play();
         }
     }
 }

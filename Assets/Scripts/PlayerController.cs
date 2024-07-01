@@ -266,6 +266,9 @@ public class PlayerController : MonoBehaviour
                 heldObject = null;
             }
         }
+
+        bool speedTime = input.timeSpeed;
+        Time.timeScale = speedTime ? 50.0f : 1.0f;
     }
 
     private void CameraRotation()

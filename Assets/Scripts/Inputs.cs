@@ -11,6 +11,7 @@ public class Inputs : MonoBehaviour
 	public bool sprint;
 	public bool sneak;
 	public bool drop;
+	public bool timeSpeed;
 
 	private InputAction _moveAction;
 	private InputAction _lookAction;
@@ -19,6 +20,7 @@ public class Inputs : MonoBehaviour
 	private InputAction _sprintAction;
 	private InputAction _sneakAction;
 	private InputAction _dropAction;
+	private InputAction _timeSpeedAction;
 
 	[Header("Movement Settings")]
 	[SerializeField]
@@ -41,6 +43,7 @@ public class Inputs : MonoBehaviour
 		_sprintAction = _playerInput.actions["Sprint"];
 		_sneakAction = _playerInput.actions["Sneak"];
 		_dropAction = _playerInput.actions["Drop"];
+		_timeSpeedAction = _playerInput.actions["TimeSpeed"];
 	}
 
     private void Update()
@@ -52,6 +55,7 @@ public class Inputs : MonoBehaviour
 		sprint = _sprintAction.IsPressed();
 		sneak = _sneakAction.WasPressedThisFrame();
 		drop = _dropAction.WasPressedThisFrame();
+		timeSpeed = _timeSpeedAction.IsPressed();
     }
 
 	public bool IsAnalog()
