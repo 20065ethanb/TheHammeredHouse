@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Door : MonoBehaviour
 {
-    public bool locked = false;
+    public List<GameObject> doorLocks;
 
     public bool open = false;
     public float smooth = 1.0f;
     public float DoorOpenAngle = -90.0f;
     public float DoorCloseAngle = 0.0f;
 
-    public AudioSource audioSource;
+    private AudioSource audioSource;
     public AudioClip openDoor, closeDoor;
 
     public GameObject pairedDoor;
@@ -35,14 +35,15 @@ public class Door : MonoBehaviour
 
     public void PlayerInteract()
     {
-        if (locked)
+        CheckLocks();
+        if (doorLocks.Count == 0)
         {
-            // Tell player that door is locked
-            canvas.GetComponent<UI>().flashMessage("Door is Locked!", 2.0f);
+            Interact();
         }
         else
         {
-            Interact();
+            // Tell player that door has a lock
+            canvas.GetComponent<UI>().flashMessage("Door is Locked!", 2.0f);
         }
     }
 
@@ -56,7 +57,8 @@ public class Door : MonoBehaviour
 
     public void SetState(bool state)
     {
-        if (!(locked || open == state))
+        CheckLocks();
+        if (doorLocks.Count == 0 && open != state)
         {
             open = state;
             // if the door is open disable the box collider
@@ -64,6 +66,16 @@ public class Door : MonoBehaviour
             // Play sound
             audioSource.clip = open ? openDoor : closeDoor;
             audioSource.Play();
+        }
+    }
+
+    private void CheckLocks()
+    {
+        // Removes empty spaces from the locks list
+        for (int i = doorLocks.Count - 1; i >= 0; i--)
+        {
+            if (doorLocks[i] == null)
+                doorLocks.RemoveAt(i);
         }
     }
 }

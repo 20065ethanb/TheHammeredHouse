@@ -212,14 +212,18 @@ public class PlayerController : MonoBehaviour
 
             if (use1) // Left click
             {
-                if (heldObject != null)
-                    heldObject.GetComponent<Object>().Use(objectHit);
-                else
+                if (objectHit.CompareTag("Object"))
                 {
-                    if (objectHit != null)
+                    if (objectHit.GetComponent<Target>() != null)
                     {
-                        if (objectHit.CompareTag("Object"))
+                        if (heldObject != null)
+                        {
+                            heldObject.GetComponent<Object>().Use(objectHit);
+                        }
+                        else
+                        {
                             objectHit.GetComponent<Target>().ObjectInteraction(false);
+                        }
                     }
                 }
             }
@@ -235,6 +239,7 @@ public class PlayerController : MonoBehaviour
                     if (objectHit.GetComponent<Object>() != null)
                     {
                         heldObject = objectHit;
+                        heldObject.GetComponent<Rigidbody>().useGravity = false;
                         heldObject.GetComponent<Object>().PickedUp();
                     }
                 }

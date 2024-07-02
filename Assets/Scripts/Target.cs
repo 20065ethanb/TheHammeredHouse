@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
-    public string incorrectToolMessage = "Wrong Tool";
+    public string incorrectToolMessage = "X requires a Y to Z!";
     private GameObject canvas;
 
     // Start is called before the first frame update

@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class Object : MonoBehaviour
 {
-    public bool isTool;
-    //public float rechargeTime = 0.5f;
     public List<GameObject> targets;
+
+    private AudioSource audioSource;
+    public AudioClip useSound;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -33,6 +34,14 @@ public class Object : MonoBehaviour
     public void Use(GameObject objectHit)
     {
         if (objectHit.GetComponent<Target>() != null)
-            objectHit.GetComponent<Target>().ObjectInteraction(targets.Contains(objectHit));
+        {
+            bool validUse = targets.Contains(objectHit);
+            objectHit.GetComponent<Target>().ObjectInteraction(validUse);
+            if (validUse)
+            {
+                audioSource.clip = useSound;
+                audioSource.Play();
+            }
+        }
     }
 }

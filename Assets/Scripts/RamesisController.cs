@@ -12,8 +12,8 @@ public class RamesisController : MonoBehaviour
     private float attackRange = 1.1f;
 
     private bool chasing = false;
-    private float roomChecks = 3;
-    private float roomCheck = 0;
+    private float chaseChecks = 5;
+    private float chaseCheck = 0;
 
     private float wonderTime = 2;
     private float wonderTimer = 0;
@@ -67,18 +67,25 @@ public class RamesisController : MonoBehaviour
                 wonderCentre.y = playerGameObject.transform.position.y;
                 wonderRange = distanceToPlayer;
 
-                roomCheck = 0;
+                chaseCheck = 0;
             }
             else
             {
-                if (agent.remainingDistance < 0.5f)
+                if (agent.remainingDistance < attackRange)
                 {
-                    if (roomCheck < roomChecks)
+                    if (chaseCheck < chaseChecks)
                     {
-                        Vector2 randomOffset = Random.insideUnitCircle;
-                        agentTargetPosition = wonderCentre + new Vector3(randomOffset.x, 0, randomOffset.y) * wonderRange;
-
-                        roomCheck++;
+                        if (chaseCheck == 0)
+                        {
+                            agentTargetPosition = wonderCentre;
+                        }
+                        else
+                        {
+                            Vector2 randomOffset = Random.insideUnitCircle;
+                            agentTargetPosition = wonderCentre + new Vector3(randomOffset.x, 0, randomOffset.y) * wonderRange;
+                        }
+                        agentUpdateTimer = -1;
+                        chaseCheck++;
                     }
                     else
                     {
@@ -105,8 +112,7 @@ public class RamesisController : MonoBehaviour
                     agent.speed = 0;
                     if (wonderTimer < 0)
                     {
-                        // Fix this to be smarter
-                        agentTargetPosition = Random.insideUnitSphere * 9;
+                        agentTargetPosition = RandomPoint(transform.position, 8);
                     }
                     else
                         wonderTimer -= Time.deltaTime;
@@ -129,7 +135,7 @@ public class RamesisController : MonoBehaviour
             }
         }
 
-        if (agentUpdateTimer < 0)
+        if (agentUpdateTimer <= 0)
         {
             agent.SetDestination(agentTargetPosition);
             agentUpdateTimer = agentUpdateTime;
@@ -141,7 +147,7 @@ public class RamesisController : MonoBehaviour
         if (wonderCentreObject != null) wonderCentreObject.transform.position = wonderCentre;
     }
 
-    bool CanSeePlayer()
+    private bool CanSeePlayer()
     {
         // Casts ray towards player
         Ray ray = new(head.transform.position, playerGameObject.transform.position - transform.position);
@@ -165,5 +171,19 @@ public class RamesisController : MonoBehaviour
             Debug.DrawLine(ray.origin, ray.origin + ray.direction * sightRange, Color.green);
         }
         return false;
+    }
+
+    private Vector3 RandomPoint(Vector3 center, float range)
+    {
+        Vector3 randomPoint = center + Random.insideUnitSphere * range;
+        return ClosestMeshPoint(randomPoint);
+    }
+
+    private Vector3 ClosestMeshPoint(Vector3 point)
+    {
+        NavMeshHit hit;
+        // the function find the closest point on the nav mesh to the randomly generated point 
+        NavMesh.SamplePosition(point, out hit, 10.0f, NavMesh.AllAreas);
+        return hit.position;
     }
 }
