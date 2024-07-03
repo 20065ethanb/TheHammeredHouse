@@ -62,6 +62,7 @@ public class RamesisController : MonoBehaviour
             {
                 agent.speed = runSpeed;
                 agentTargetPosition = playerGameObject.transform.position;
+
                 Vector3 playerVelcocity = playerGameObject.GetComponent<CharacterController>().velocity;
                 wonderCentre = playerGameObject.transform.position + playerVelcocity.normalized * distanceToPlayer;
                 wonderCentre.y = playerGameObject.transform.position.y;
@@ -75,15 +76,7 @@ public class RamesisController : MonoBehaviour
                 {
                     if (chaseCheck < chaseChecks)
                     {
-                        if (chaseCheck == 0)
-                        {
-                            agentTargetPosition = wonderCentre;
-                        }
-                        else
-                        {
-                            Vector2 randomOffset = Random.insideUnitCircle;
-                            agentTargetPosition = wonderCentre + new Vector3(randomOffset.x, 0, randomOffset.y) * wonderRange;
-                        }
+                        agentTargetPosition = (chaseCheck == 0) ? wonderCentre : RandomPoint(wonderCentre, wonderRange, true);
                         agentUpdateTimer = -1;
                         chaseCheck++;
                     }
@@ -112,7 +105,7 @@ public class RamesisController : MonoBehaviour
                     agent.speed = 0;
                     if (wonderTimer < 0)
                     {
-                        agentTargetPosition = RandomPoint(transform.position, 8);
+                        agentTargetPosition = RandomPoint(transform.position, 8, false);
                     }
                     else
                         wonderTimer -= Time.deltaTime;
@@ -173,17 +166,19 @@ public class RamesisController : MonoBehaviour
         return false;
     }
 
-    private Vector3 RandomPoint(Vector3 center, float range)
+    private Vector3 RandomPoint(Vector3 center, float range, bool sameY)
     {
-        Vector3 randomPoint = center + Random.insideUnitSphere * range;
-        return ClosestMeshPoint(randomPoint);
+        Vector3 randomOffset = Random.insideUnitSphere * range;
+        if (sameY) randomOffset.y = 0;
+        Vector3 randomPoint = center + randomOffset;
+        return ClosestMeshPoint(randomPoint, range);
     }
 
-    private Vector3 ClosestMeshPoint(Vector3 point)
+    private Vector3 ClosestMeshPoint(Vector3 point, float range)
     {
         NavMeshHit hit;
         // the function find the closest point on the nav mesh to the randomly generated point 
-        NavMesh.SamplePosition(point, out hit, 10.0f, NavMesh.AllAreas);
+        NavMesh.SamplePosition(point, out hit, range * 2, NavMesh.AllAreas);
         return hit.position;
     }
 }

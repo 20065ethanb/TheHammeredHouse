@@ -243,6 +243,19 @@ public class PlayerController : MonoBehaviour
                         heldObject.GetComponent<Object>().PickedUp();
                     }
                 }
+
+
+                if (objectHit.CompareTag("Switch"))
+                {
+                    if (objectHit.GetComponent<PowerSwitch>() != null)
+                    {
+                        objectHit.GetComponent<PowerSwitch>().flipSwitch();
+                    }
+                    else if (objectHit.GetComponent<PowerLever>() != null)
+                    {
+                        objectHit.GetComponent<PowerLever>().flipSwitch();
+                    }
+                }
             }
 
             Debug.DrawLine(ray.origin, hit.point, Color.red);
