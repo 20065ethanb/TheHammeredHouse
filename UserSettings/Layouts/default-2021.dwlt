@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 2560
     height: 1349
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Scene
   m_RootView: {fileID: 3}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -34,7 +34,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: GameView
+  m_Name: ConsoleWindow
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
@@ -43,14 +43,14 @@ MonoBehaviour:
     y: 725
     width: 1502
     height: 574
-  m_MinSize: {x: 202, y: 221}
+  m_MinSize: {x: 102, y: 121}
   m_MaxSize: {x: 4002, y: 4021}
-  m_ActualView: {fileID: 19}
+  m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
   - {fileID: 19}
-  m_Selected: 1
-  m_LastSelected: 0
+  m_Selected: 0
+  m_LastSelected: 1
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 63
+  controlID: 16
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 17
+  controlID: 95
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -249,7 +249,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 64
+  controlID: 17
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -361,10 +361,10 @@ MonoBehaviour:
     m_SaveData: []
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 26}
-      m_SelectedIDs: a8a70000
-      m_LastClickedID: 42920
-      m_ExpandedIDs: 7278ffff28a7ffff18fbffff44630000507e000072980000c29f00001ea0000072a40000
+      scrollPos: {x: 0, y: 0}
+      m_SelectedIDs: 
+      m_LastClickedID: 0
+      m_ExpandedIDs: 36f7ffff7c860000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -429,22 +429,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts
+    - Assets/Prefabs/HouseComponents
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scripts
+  - Assets/Prefabs/HouseComponents
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Users\TheHa\Documents\GitHub\TheHammeredHouse
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 362}
-    m_SelectedIDs: e8af0000
-    m_LastClickedID: 45032
-    m_ExpandedIDs: 00000000f4ae0000f6ae0000f8ae0000faae0000fcae0000feae000000af000002af000004af000006af000008af00000aaf00000caf00000eaf000010af000012af000014af000016af000018af00001aaf00001caf00001eaf000020af000022af000024af000026af000028af00002aaf00002caf00002eaf000030af000032af000036af000038af0000b2af0000b6af0000c6af000066b100003e01020000ca9a3b
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: f6c00000
+    m_LastClickedID: 49398
+    m_ExpandedIDs: 0000000048b600004ab600004cb600004eb6000050b6000052b6000054b6000056b6000058b600005ab600005cb600005eb6000060b6000062b6000064b6000066b6000068b600006ab600006cb600006eb6000070b6000072b6000074b6000076b6000078b600007ab600007cb600007eb6000080b6000082b6000084b6000086b6000088b6000092b6000094b6000060b8000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -472,7 +472,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000f4ae0000f6ae0000f8ae0000faae0000fcae0000feae000000af000002af000004af000006af000008af00000aaf00000caf00000eaf000010af000012af000014af000016af000018af00001aaf00001caf00001eaf000020af000022af000024af000026af000028af00002aaf00002caf00002eaf000030af000032af000034af000036af000038af0000
+    m_ExpandedIDs: 0000000048b600004ab600004cb600004eb6000050b6000052b6000054b6000056b6000058b600005ab600005cb600005eb6000060b6000062b6000064b6000066b6000068b600006ab600006cb600006eb6000070b6000072b6000074b6000076b6000078b600007ab600007cb600007eb6000080b6000082b6000084b6000086b6000088b600008ab600008cb600008eb6000090b6000092b6000094b60000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -503,15 +503,15 @@ MonoBehaviour:
     m_ExpandedInstanceIDs: c62300008c70000000000000c6b200002cfd0000c4030100
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: PowerLever
-      m_OriginalName: PowerLever
+      m_Name: DoorRightSide
+      m_OriginalName: DoorRightSide
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 172240
+      m_UserData: 49404
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0
@@ -753,9 +753,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 1.4577463, y: -1.5409784, z: 9.289775}
+    m_Target: {x: -0.9810687, y: -8.951871, z: -7.3974056}
     speed: 2
-    m_Value: {x: 1.4577463, y: -1.5409784, z: 9.289775}
+    m_Value: {x: -0.9810687, y: -8.951871, z: -7.3974056}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -802,13 +802,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.35266042, y: 0.20529816, z: -0.07958788, w: 0.9095062}
+    m_Target: {x: 0.01066965, y: 0.8985041, z: -0.43835446, w: 0.021827836}
     speed: 2
-    m_Value: {x: 0.35265118, y: 0.20529278, z: -0.07958579, w: 0.90948236}
+    m_Value: {x: 0.010636611, y: 0.8991362, z: -0.4369943, w: 0.02184322}
   m_Size:
-    m_Target: 1.7500367
+    m_Target: 13.676655
     speed: 2
-    m_Value: 1.7500367
+    m_Value: 14.321104
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -965,7 +965,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 1
+    m_EnableMouseInput: 0
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1

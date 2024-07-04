@@ -247,14 +247,7 @@ public class PlayerController : MonoBehaviour
 
                 if (objectHit.CompareTag("Switch"))
                 {
-                    if (objectHit.GetComponent<PowerSwitch>() != null)
-                    {
-                        objectHit.GetComponent<PowerSwitch>().flipSwitch();
-                    }
-                    else if (objectHit.GetComponent<PowerLever>() != null)
-                    {
-                        objectHit.GetComponent<PowerLever>().flipSwitch();
-                    }
+                    objectHit.transform.parent.GetComponent<PowerBox>().flipSwitch(objectHit);
                 }
             }
 

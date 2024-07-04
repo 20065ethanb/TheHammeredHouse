@@ -29,8 +29,8 @@ public class Door : MonoBehaviour
 
     void Update()
     {
-        var target = Quaternion.Euler(0, open ? DoorOpenAngle : DoorCloseAngle, 0);
-        transform.localRotation = Quaternion.Slerp(transform.localRotation, target, Time.deltaTime * 5 * smooth);
+        Quaternion doorRotation = Quaternion.Euler(0, open ? DoorOpenAngle : DoorCloseAngle, 0);
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, doorRotation, Time.deltaTime * 5 * smooth);
     }
 
     public void PlayerInteract()
