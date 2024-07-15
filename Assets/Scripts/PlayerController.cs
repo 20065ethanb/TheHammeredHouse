@@ -31,6 +31,10 @@ public class PlayerController : MonoBehaviour
     public float standingPosition = 1.375f;
     public float sneakingPosition = 0.75f;
 
+    public bool isAlive = true;
+
+    public GameObject ramesisTarget;
+
     // cinemachine
     private float cinemachineTargetPitch;
 
@@ -44,9 +48,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     private Inputs input;
     private GameObject mainCamera;
-
-    private GameObject crosshairOn;
-    private GameObject crosshairOff;
+    private UI ui;
 
     private const float threshold = 0.01f;
     private const float speedOffset = 0.1f;
@@ -69,8 +71,7 @@ public class PlayerController : MonoBehaviour
         mainCamera = GameObject.Find("MainCamera");
 
         Transform canvas = GameObject.Find("Canvas").transform;
-        crosshairOff = canvas.Find("Crosshair_Off").gameObject;
-        crosshairOn = canvas.Find("Crosshair_On").gameObject;
+        ui = canvas.GetComponent<UI>();
     }
 
     private void Update()
@@ -78,9 +79,13 @@ public class PlayerController : MonoBehaviour
         GroundedCheck();
         Gravity();
         Sneak();
-        Move();
-        Interact();
-        Keybinds();
+
+        if (isAlive)
+        {
+            Move();
+            Interact();
+            Keybinds();
+        }
     }
 
     private void LateUpdate()
@@ -120,7 +125,7 @@ public class PlayerController : MonoBehaviour
         if (sneak) sneaking = !sneaking;
 
         float targetY = cinemachineCameraTarget.transform.localPosition.y;
-        if (sneaking)
+        if (sneaking && isAlive)
         {
             if (targetY > sneakingPosition)
                 targetY -= 0.05f;
@@ -259,8 +264,8 @@ public class PlayerController : MonoBehaviour
             Debug.DrawLine(ray.origin, ray.origin + ray.direction * reach, Color.green);
         }
 
-        crosshairOff.SetActive(!cast);
-        crosshairOn.SetActive(cast);
+        // call ui to set corsshair
+        ui.crosshair(cast);
     }
 
     private void Keybinds()
@@ -284,6 +289,13 @@ public class PlayerController : MonoBehaviour
 
     private void CameraRotation()
     {
+        // When the player is dead they face the ramesis
+        if (!isAlive)
+        {
+            cinemachineCameraTarget.transform.LookAt(ramesisTarget.transform.position);
+            return;
+        }
+
         Vector2 look = input.look;
         // If there is an input
         if (look.sqrMagnitude >= threshold)

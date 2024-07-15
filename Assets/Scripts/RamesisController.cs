@@ -9,7 +9,7 @@ public class RamesisController : MonoBehaviour
     private float runSpeed = 4;
 
     private float sightRange = 15;
-    private float attackRange = 1.1f;
+    private float attackRange = 1.5f;
 
     private bool chasing = false;
     private float chaseChecks = 5;
@@ -24,6 +24,7 @@ public class RamesisController : MonoBehaviour
 
     private GameObject playerGameObject;
     private NavMeshAgent agent;
+    private Animator animator;
 
     private float agentUpdateTime = 0.2f;
     private float agentUpdateTimer = 0;
@@ -41,6 +42,7 @@ public class RamesisController : MonoBehaviour
 
         playerGameObject = GameObject.Find("PlayerCharacter");
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
 
         doors = GameObject.FindGameObjectsWithTag("Door");
     }
@@ -56,11 +58,22 @@ public class RamesisController : MonoBehaviour
             {
                 // Attack player
                 agent.speed = 0;
+                animator.SetFloat("Speed", 0);
                 agentTargetPosition = transform.position;
+
+                if (playerGameObject.GetComponent<PlayerController>().isAlive)
+                {
+                    transform.LookAt(playerGameObject.transform);
+                    animator.SetTrigger("Attack");
+                    animator.SetFloat("AttackType", Mathf.Round(Random.value));
+
+                    playerGameObject.GetComponent<PlayerController>().isAlive = false;
+                }
             }
             else if (CanSeePlayer())
             {
                 agent.speed = runSpeed;
+                animator.SetFloat("Speed", 1);
                 agentTargetPosition = playerGameObject.transform.position;
 
                 Vector3 playerVelcocity = playerGameObject.GetComponent<CharacterController>().velocity;
@@ -90,6 +103,7 @@ public class RamesisController : MonoBehaviour
         else
         {
             agent.speed = walkSpeed;
+            animator.SetFloat("Speed", 0.5f);
             if (CanSeePlayer())
             {
                 chasing = true;

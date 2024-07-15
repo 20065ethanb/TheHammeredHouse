@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\Door.cs" />
     <Compile Include="Assets\Free Wood Door Pack\Script\CameraOpenDoor.cs" />
     <Compile Include="Assets\Free Wood Door Pack\Script\Door.cs" />
+    <Compile Include="Assets\Old Nightstand\Demo\demoBehaviour.cs" />
     <Compile Include="Assets\Scripts\Target.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\VolumetricLines\Scripts\VolumetricLineBehavior.cs" />
