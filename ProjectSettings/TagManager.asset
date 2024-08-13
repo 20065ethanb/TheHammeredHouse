@@ -8,6 +8,7 @@ TagManager:
   - Door
   - Object
   - Switch
+  - Closet
   layers:
   - Default
   - TransparentFX

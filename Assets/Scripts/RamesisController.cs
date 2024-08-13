@@ -11,7 +11,8 @@ public class RamesisController : MonoBehaviour
     private float sightRange = 15;
     private float attackRange = 1.5f;
 
-    private bool chasing = false;
+    public bool chasing = false;
+
     private float chaseChecks = 5;
     private float chaseCheck = 0;
 
@@ -25,6 +26,7 @@ public class RamesisController : MonoBehaviour
     private GameObject playerGameObject;
     private NavMeshAgent agent;
     private Animator animator;
+    private UI ui;
 
     private float agentUpdateTime = 0.2f;
     private float agentUpdateTimer = 0;
@@ -44,6 +46,9 @@ public class RamesisController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
+        Transform canvas = GameObject.Find("Canvas").transform;
+        ui = canvas.GetComponent<UI>();
+
         doors = GameObject.FindGameObjectsWithTag("Door");
     }
 
@@ -52,36 +57,41 @@ public class RamesisController : MonoBehaviour
     {
         if (chasing)
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, playerGameObject.transform.position);
+            float distanceToPlayer = Vector3.Distance(transform.position, playerGameObject.transform.position); // Gets distance to player
 
-            if (distanceToPlayer < attackRange)
+            if (CanSeePlayer())
             {
-                // Attack player
-                agent.speed = 0;
-                animator.SetFloat("Speed", 0);
-                agentTargetPosition = transform.position;
-
-                if (playerGameObject.GetComponent<PlayerController>().isAlive)
+                if (distanceToPlayer < attackRange)
                 {
-                    transform.LookAt(playerGameObject.transform);
-                    animator.SetTrigger("Attack");
-                    animator.SetFloat("AttackType", Mathf.Round(Random.value));
+                    // Attack player
+                    agent.speed = 0;
+                    animator.SetFloat("Speed", 0);
+                    agentTargetPosition = transform.position;
 
-                    playerGameObject.GetComponent<PlayerController>().isAlive = false;
+                    if (playerGameObject.GetComponent<PlayerController>().isAlive)
+                    {
+                        transform.LookAt(playerGameObject.transform);
+                        animator.SetTrigger("Attack");
+                        animator.SetFloat("AttackType", Mathf.Round(Random.value));
+
+                        playerGameObject.GetComponent<PlayerController>().isAlive = false;
+                    }
                 }
-            }
-            else if (CanSeePlayer())
-            {
-                agent.speed = runSpeed;
-                animator.SetFloat("Speed", 1);
-                agentTargetPosition = playerGameObject.transform.position;
+                else
+                {
+                    // Chase player
+                    agent.speed = runSpeed;
+                    animator.SetFloat("Speed", 1);
+                    agentTargetPosition = playerGameObject.transform.position;
 
-                Vector3 playerVelcocity = playerGameObject.GetComponent<CharacterController>().velocity;
-                wonderCentre = playerGameObject.transform.position + playerVelcocity.normalized * distanceToPlayer;
-                wonderCentre.y = playerGameObject.transform.position.y;
-                wonderRange = distanceToPlayer;
+                    Vector3 playerVelcocity = playerGameObject.GetComponent<CharacterController>().velocity;
+                    // predict where the player is going
+                    wonderCentre = playerGameObject.transform.position + playerVelcocity.normalized * distanceToPlayer;
+                    wonderCentre.y = playerGameObject.transform.position.y;
+                    wonderRange = distanceToPlayer;
 
-                chaseCheck = 0;
+                    chaseCheck = 0;
+                }
             }
             else
             {
@@ -154,7 +164,7 @@ public class RamesisController : MonoBehaviour
         if (wonderCentreObject != null) wonderCentreObject.transform.position = wonderCentre;
     }
 
-    private bool CanSeePlayer()
+    public bool CanSeePlayer()
     {
         // Casts ray towards player
         Ray ray = new(head.transform.position, playerGameObject.transform.position - transform.position);
@@ -194,5 +204,10 @@ public class RamesisController : MonoBehaviour
         // the function find the closest point on the nav mesh to the randomly generated point 
         NavMesh.SamplePosition(point, out hit, range * 2, NavMesh.AllAreas);
         return hit.position;
+    }
+
+    public void kill()
+    {
+        ui.GameOver();
     }
 }

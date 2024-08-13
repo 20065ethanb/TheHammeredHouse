@@ -53,6 +53,10 @@ public class PlayerController : MonoBehaviour
     private const float threshold = 0.01f;
     private const float speedOffset = 0.1f;
 
+    public GameObject currentCloset;
+
+    public GameObject youWinPoint;
+
     private bool IsCurrentDeviceMouse
     {
         get
@@ -85,6 +89,7 @@ public class PlayerController : MonoBehaviour
             Move();
             Interact();
             Keybinds();
+            Closets();
         }
     }
 
@@ -128,14 +133,14 @@ public class PlayerController : MonoBehaviour
         if (sneaking && isAlive)
         {
             if (targetY > sneakingPosition)
-                targetY -= 0.05f;
+                targetY -= 0.02f;
             else
                 targetY = sneakingPosition;
         }
         else
         {
             if (targetY < standingPosition)
-                targetY += 0.05f;
+                targetY += 0.02f;
             else
                 targetY = standingPosition;
         }
@@ -199,6 +204,11 @@ public class PlayerController : MonoBehaviour
 
         // Move the player
         controller.Move(inputDirection.normalized * (speed * Time.deltaTime) + new Vector3(0.0f, verticalVelocity, 0.0f) * Time.deltaTime);
+
+        if (Vector3.Distance(transform.position, youWinPoint.transform.position) < reach)
+        {
+            ui.YouWin();
+        }
     }
 
     private void Interact()
@@ -206,6 +216,8 @@ public class PlayerController : MonoBehaviour
         // Checks whether the player has clicked
         bool use1 = input.use1;
         bool use2 = input.use2;
+
+        bool interact = input.interact;
 
         // Casts ray to see where the player is looking
         Ray ray = new(mainCamera.transform.position, mainCamera.transform.forward);
@@ -254,6 +266,22 @@ public class PlayerController : MonoBehaviour
                 {
                     objectHit.transform.parent.GetComponent<PowerBox>().flipSwitch(objectHit);
                 }
+
+                if (objectHit.GetComponent<KeypadButton>() != null)
+                {
+                    objectHit.GetComponent<KeypadButton>().PressButton();
+                }
+            }
+
+            // closets
+            if (objectHit.CompareTag("Closet"))
+            {
+                ui.flashMessage("[E] to hide", 1);
+                if (interact)
+                {
+                    currentCloset = objectHit;
+                    currentCloset.GetComponent<Closet>().Interact();
+                }
             }
 
             Debug.DrawLine(ray.origin, hit.point, Color.red);
@@ -285,6 +313,27 @@ public class PlayerController : MonoBehaviour
 
         bool speedTime = input.timeSpeed;
         Time.timeScale = speedTime ? 50.0f : 1.0f;
+    }
+
+    private void Closets()
+    {
+        bool close = input.close;
+
+        if (currentCloset != null)
+        {
+            sneaking = false;
+            transform.position = currentCloset.GetComponent<Closet>().insidePosition.position;
+            ui.flashMessage("[Q] to exit", 1);
+            if (close)
+            {
+                currentCloset.GetComponent<Closet>().Interact();
+                transform.position = currentCloset.GetComponent<Closet>().outsidePosition.position;
+                controller.enabled = false;
+                controller.transform.position = currentCloset.GetComponent<Closet>().outsidePosition.position;
+                controller.enabled = true;
+                currentCloset = null;
+            }
+        }
     }
 
     private void CameraRotation()

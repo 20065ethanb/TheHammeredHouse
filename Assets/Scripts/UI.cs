@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UI : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class UI : MonoBehaviour
 
     private GameObject startMenu;
     private GameObject gameUI;
+    private GameObject gameOverMenu;
+    private GameObject youWinScreen;
 
     private GameObject staminaBar;
     private GameObject crosshairOn;
@@ -24,6 +27,8 @@ public class UI : MonoBehaviour
         // Get objects
         startMenu = transform.Find("StartMenu").gameObject;
         gameUI = transform.Find("GameUI").gameObject;
+        gameOverMenu = transform.Find("GameOverMenu").gameObject;
+        youWinScreen = transform.Find("YouWinScreen").gameObject;
 
         staminaBar = gameUI.transform.Find("Stamina Bar").gameObject;
         crosshairOn = gameUI.transform.Find("Crosshair_On").gameObject;
@@ -35,6 +40,8 @@ public class UI : MonoBehaviour
         // Shows start menu
         startMenu.SetActive(true);
         gameUI.SetActive(false);
+        gameOverMenu.SetActive(false);
+        youWinScreen.SetActive(false);
 
         // Pause time
         Time.timeScale = 0f;
@@ -85,5 +92,38 @@ public class UI : MonoBehaviour
         messageText.GetComponent<TextMeshProUGUI>().text = message;
         messageText.SetActive(true);
         messageTime = showTime;
+    }
+
+    public void GameOver()
+    {
+        // Hides UI
+        gameUI.SetActive(false);
+        gameOverMenu.SetActive(true);
+
+        // Pause time
+        Time.timeScale = 0f;
+
+        // Disable inputs
+        playerGameObject.GetComponent<Inputs>().SetCursorState(false);
+        playerGameObject.GetComponent<PlayerController>().enabled = false;
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void YouWin()
+    {
+        // Hides UI
+        gameUI.SetActive(false);
+        youWinScreen.SetActive(true);
+
+        // Pause time
+        Time.timeScale = 0f;
+
+        // Disable inputs
+        playerGameObject.GetComponent<Inputs>().SetCursorState(false);
+        playerGameObject.GetComponent<PlayerController>().enabled = false;
     }
 }
