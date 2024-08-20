@@ -20,9 +20,14 @@ public class PowerBox : MonoBehaviour
 
     public List<GameObject> lasers;
 
+    private AudioSource audioSource;
+    public AudioClip mainSound, secondSound;
+
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+
         while (switchStates.Count < switches.Count)
         {
             switchStates.Add(Random.value > 0.5f);
@@ -53,11 +58,17 @@ public class PowerBox : MonoBehaviour
         if (s.Equals(mainSwitch))
         {
             mainSwitchState = !mainSwitchState;
+            // Play sound
+            audioSource.clip = mainSound;
+            audioSource.Play();
         }
         else if (switches.Contains(s))
         {
             int i = switches.IndexOf(s);
             switchStates[i] = !switchStates[i];
+            // Play sound
+            audioSource.clip = secondSound;
+            audioSource.Play();
         }
     }
 }

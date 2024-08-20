@@ -3,15 +3,12 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float sneakSpeed = 1.0f;
     public float walkSpeed = 2.5f;
     public float sprintSpeed = 5.0f;
     public float rotationSpeed = 1.0f;
     public float speedChangeRate = 10.0f;
 
-    public bool sneaking = false;
-
-    public float MAX_STAMINA = 5.0f;
+    public float MAX_STAMINA = 8.0f;
     public float stamina;
 
     public float gravity = -9.8f;
@@ -29,7 +26,6 @@ public class PlayerController : MonoBehaviour
     public float bottomClamp = -30.0f;
 
     public float standingPosition = 1.375f;
-    public float sneakingPosition = 0.75f;
 
     public bool isAlive = true;
 
@@ -47,6 +43,8 @@ public class PlayerController : MonoBehaviour
     private PlayerInput playerInput;
     private CharacterController controller;
     private Inputs input;
+    private GameObject visuals;
+    private Animator animator;
     private GameObject mainCamera;
     private UI ui;
 
@@ -72,6 +70,8 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         input = GetComponent<Inputs>();
         playerInput = GetComponent<PlayerInput>();
+        visuals = transform.Find("Visuals").gameObject;
+        animator = visuals.GetComponent<Animator>();
         mainCamera = GameObject.Find("MainCamera");
 
         Transform canvas = GameObject.Find("Canvas").transform;
@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
     {
         GroundedCheck();
         Gravity();
-        Sneak();
+        Animations();
 
         if (isAlive)
         {
@@ -123,28 +123,22 @@ public class PlayerController : MonoBehaviour
             verticalVelocity += gravity * Time.deltaTime;
         }
     }
-
-    private void Sneak()
+    private void Animations()
     {
-        bool sneak = input.sneak;
-        if (sneak) sneaking = !sneaking;
-
-        float targetY = cinemachineCameraTarget.transform.localPosition.y;
-        if (sneaking && isAlive)
+        if (isAlive)
         {
-            if (targetY > sneakingPosition)
-                targetY -= 0.02f;
-            else
-                targetY = sneakingPosition;
+            Vector2 move = input.move;
+            bool sprint = input.sprint;
+
+            // animations
+            if (sprint) animator.SetFloat("Speed", 1);
+            else if (move != Vector2.zero) animator.SetFloat("Speed", 0.5f);
+            else animator.SetFloat("Speed", 0);
         }
         else
         {
-            if (targetY < standingPosition)
-                targetY += 0.02f;
-            else
-                targetY = standingPosition;
+            animator.SetFloat("Speed", 0);
         }
-        cinemachineCameraTarget.transform.localPosition = new Vector3(0, targetY, 0);
     }
 
     private void Move()
@@ -152,13 +146,11 @@ public class PlayerController : MonoBehaviour
         Vector2 move = input.move;
         bool sprint = input.sprint;
 
-        // When sprinting you can't sneak
-        if (sneaking && sprint) sneaking = false;
-
         // If the player is out of stamina, no sprinting
         // If the player is not moving, no sprinting
         if (sprint && (stamina <= 0 || move == Vector2.zero)) sprint = false;
 
+        visuals.transform.localPosition = new Vector3(0, 0.1f, 0);
 
         // When the player sprints, stamina decreases
         // When the player walks, stamina increases slowly
@@ -167,7 +159,7 @@ public class PlayerController : MonoBehaviour
         else if (stamina < MAX_STAMINA) stamina += ((move != Vector2.zero) ? 0.125f : 0.5f) * Time.deltaTime;
 
         // Sets target speed based on move speed
-        float targetSpeed = sneaking ? sneakSpeed : (sprint ? sprintSpeed : walkSpeed);
+        float targetSpeed = sprint ? sprintSpeed : walkSpeed;
 
         // If there is no input, set the target speed to 0
         if (move == Vector2.zero) targetSpeed = 0.0f;
@@ -221,7 +213,7 @@ public class PlayerController : MonoBehaviour
 
         // Casts ray to see where the player is looking
         Ray ray = new(mainCamera.transform.position, mainCamera.transform.forward);
-        bool cast = Physics.Raycast(ray, out RaycastHit hit, reach, ~(1 << 3));
+        bool cast = Physics.Raycast(ray, out RaycastHit hit, reach, ~(1 << 2));
         if (cast)
         {
             // Gives info on the object the player is looking at
@@ -321,7 +313,6 @@ public class PlayerController : MonoBehaviour
 
         if (currentCloset != null)
         {
-            sneaking = false;
             transform.position = currentCloset.GetComponent<Closet>().insidePosition.position;
             ui.flashMessage("[Q] to exit", 1);
             if (close)
@@ -363,6 +354,8 @@ public class PlayerController : MonoBehaviour
 
             // Rotate the player left and right
             transform.Rotate(Vector3.up * rotationVelocity);
+
+            visuals.transform.localRotation = Quaternion.Euler(Vector3.zero);
         }
     }
 

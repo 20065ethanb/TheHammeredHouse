@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class RamesisController : MonoBehaviour
 {
-    private float walkSpeed = 2;
-    private float runSpeed = 4;
+    public float walkSpeed = 2;
+    public float runSpeed = 4;
 
     private float sightRange = 15;
     private float attackRange = 1.5f;
@@ -36,6 +36,12 @@ public class RamesisController : MonoBehaviour
 
     public GameObject[] doors;
 
+    private float breathingTime = 2;
+    private float breathingTimer = 0;
+    private AudioSource audioSource;
+    public AudioClip breathingSound;
+    public AudioClip[] scareSounds;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +56,8 @@ public class RamesisController : MonoBehaviour
         ui = canvas.GetComponent<UI>();
 
         doors = GameObject.FindGameObjectsWithTag("Door");
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -71,8 +79,15 @@ public class RamesisController : MonoBehaviour
                     if (playerGameObject.GetComponent<PlayerController>().isAlive)
                     {
                         transform.LookAt(playerGameObject.transform);
+                        // prepare for attack
+                        animator.SetFloat("AttackHeight", Mathf.Abs(transform.position.y - playerGameObject.transform.position.y) > 0.5?1:0);
+
+                        // attack
                         animator.SetTrigger("Attack");
-                        animator.SetFloat("AttackType", Mathf.Round(Random.value));
+
+                        // Play sound
+                        audioSource.clip = scareSounds[Random.Range(0, scareSounds.Length)];
+                        audioSource.Play();
 
                         playerGameObject.GetComponent<PlayerController>().isAlive = false;
                     }
@@ -127,6 +142,7 @@ public class RamesisController : MonoBehaviour
                 else
                 {
                     agent.speed = 0;
+                    animator.SetFloat("Speed", 0.0f);
                     if (wonderTimer < 0)
                     {
                         agentTargetPosition = RandomPoint(transform.position, 8, false);
@@ -162,6 +178,19 @@ public class RamesisController : MonoBehaviour
 
 
         if (wonderCentreObject != null) wonderCentreObject.transform.position = wonderCentre;
+
+        if (playerGameObject.GetComponent<PlayerController>().isAlive)
+        {
+            if (breathingTimer <= 0)
+            {
+                // Play sound
+                audioSource.clip = breathingSound;
+                audioSource.Play();
+                breathingTimer = breathingTime;
+            }
+            else
+                breathingTimer -= Time.deltaTime;
+        }
     }
 
     public bool CanSeePlayer()
@@ -208,6 +237,9 @@ public class RamesisController : MonoBehaviour
 
     public void kill()
     {
+        // play player death animation
+
+        // mode ui.gameover to player controller
         ui.GameOver();
     }
 }
