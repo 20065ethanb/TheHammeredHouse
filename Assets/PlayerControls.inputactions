@@ -51,15 +51,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Sneak",
-                    "type": "Button",
-                    "id": "2bafe90a-7bf8-4f95-bcff-736cbf0032b2",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Drop",
                     "type": "Button",
                     "id": "8f779d79-5d93-49ee-9ee6-01e06820f186",
@@ -248,17 +239,6 @@
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "Sprint",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9fe17ef2-8b60-40b5-83bb-b15fed703853",
-                    "path": "<Keyboard>/ctrl",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyboardMouse",
-                    "action": "Sneak",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

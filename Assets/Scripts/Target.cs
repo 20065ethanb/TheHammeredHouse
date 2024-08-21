@@ -6,6 +6,7 @@ public class Target : MonoBehaviour
 {
     public string incorrectToolMessage = "X requires a Y to Z!";
     private GameObject canvas;
+    public TargetType type;
 
     // Start is called before the first frame update
     void Start()
@@ -30,4 +31,14 @@ public class Target : MonoBehaviour
             canvas.GetComponent<UI>().flashMessage(incorrectToolMessage, 2.0f);
         }
     }
+}
+
+public enum TargetType
+{
+    All,
+    Wood,
+    Rock,
+    Lock,
+    Metal,
+    Glass
 }

@@ -8,8 +8,8 @@ public class PlayerController : MonoBehaviour
     public float rotationSpeed = 1.0f;
     public float speedChangeRate = 10.0f;
 
-    public float MAX_STAMINA = 8.0f;
-    public float stamina;
+    public float max_stamina = 8.0f;
+    public float stamina = 0;
 
     public float gravity = -9.8f;
 
@@ -65,8 +65,6 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        stamina = MAX_STAMINA;
-
         controller = GetComponent<CharacterController>();
         input = GetComponent<Inputs>();
         playerInput = GetComponent<PlayerInput>();
@@ -156,7 +154,7 @@ public class PlayerController : MonoBehaviour
         // When the player walks, stamina increases slowly
         // When the player stands still, stamina increases
         if (sprint) stamina -= Time.deltaTime;
-        else if (stamina < MAX_STAMINA) stamina += ((move != Vector2.zero) ? 0.125f : 0.5f) * Time.deltaTime;
+        else if (stamina < max_stamina) stamina += ((move != Vector2.zero) ? 0.125f : 0.5f) * Time.deltaTime;
 
         // Sets target speed based on move speed
         float targetSpeed = sprint ? sprintSpeed : walkSpeed;
@@ -304,7 +302,7 @@ public class PlayerController : MonoBehaviour
         }
 
         bool speedTime = input.timeSpeed;
-        Time.timeScale = speedTime ? 50.0f : 1.0f;
+        Time.timeScale = speedTime ? 10.0f : 1.0f;
     }
 
     private void Closets()

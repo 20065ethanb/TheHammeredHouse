@@ -9,7 +9,6 @@ public class Inputs : MonoBehaviour
 	public bool use1;
 	public bool use2;
 	public bool sprint;
-	public bool sneak;
 	public bool drop;
 	public bool timeSpeed;
 	public bool interact;
@@ -20,7 +19,6 @@ public class Inputs : MonoBehaviour
 	private InputAction _use1Action;
 	private InputAction _use2Action;
 	private InputAction _sprintAction;
-	private InputAction _sneakAction;
 	private InputAction _dropAction;
 	private InputAction _timeSpeedAction;
 	private InputAction _interactAction;
@@ -45,7 +43,6 @@ public class Inputs : MonoBehaviour
 		_use1Action = _playerInput.actions["Use1"];
 		_use2Action = _playerInput.actions["Use2"];
 		_sprintAction = _playerInput.actions["Sprint"];
-		_sneakAction = _playerInput.actions["Sneak"];
 		_dropAction = _playerInput.actions["Drop"];
 		_timeSpeedAction = _playerInput.actions["TimeSpeed"];
 		_interactAction = _playerInput.actions["Interact"];
@@ -59,7 +56,6 @@ public class Inputs : MonoBehaviour
 		use1 = _use1Action.WasPressedThisFrame();
 		use2 = _use2Action.WasPressedThisFrame();
 		sprint = _sprintAction.IsPressed();
-		sneak = _sneakAction.WasPressedThisFrame();
 		drop = _dropAction.WasPressedThisFrame();
 		timeSpeed = _timeSpeedAction.IsPressed();
 		interact = _interactAction.IsPressed();

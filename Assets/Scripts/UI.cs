@@ -47,7 +47,6 @@ public class UI : MonoBehaviour
 
         playerGameObject = GameObject.Find("PlayerCharacter");
         audioSource = playerGameObject.GetComponent<AudioSource>();
-        staminaBar.GetComponent<Slider>().maxValue = playerGameObject.GetComponent<PlayerController>().MAX_STAMINA;
 
         ramesisGameObject = GameObject.Find("Ramesis");
 
@@ -140,7 +139,9 @@ public class UI : MonoBehaviour
         flashMessage("Escape the House!", 3);
 
         // sets player stamina
-        playerGameObject.GetComponent<PlayerController>().MAX_STAMINA *= Mathf.Pow(0.7f, difficultyValue);
+        playerGameObject.GetComponent<PlayerController>().max_stamina *= Mathf.Pow(0.7f, difficultyValue);
+        playerGameObject.GetComponent<PlayerController>().stamina = playerGameObject.GetComponent<PlayerController>().max_stamina;
+        staminaBar.GetComponent<Slider>().maxValue = playerGameObject.GetComponent<PlayerController>().max_stamina;
 
         // sets ramesis values
         ramesisGameObject.GetComponent<RamesisController>().walkSpeed *= Mathf.Pow(1.25f, difficultyValue);

@@ -11,7 +11,7 @@ public class RamesisController : MonoBehaviour
     private float sightRange = 15;
     private float attackRange = 1.5f;
 
-    public bool chasing = false;
+    private bool chasing = false;
 
     private float chaseChecks = 5;
     private float chaseCheck = 0;
@@ -145,7 +145,7 @@ public class RamesisController : MonoBehaviour
                     animator.SetFloat("Speed", 0.0f);
                     if (wonderTimer < 0)
                     {
-                        agentTargetPosition = RandomPoint(transform.position, 8, false);
+                        agentTargetPosition = RandomPoint(transform.position, 5, false);
                     }
                     else
                         wonderTimer -= Time.deltaTime;
@@ -241,5 +241,15 @@ public class RamesisController : MonoBehaviour
 
         // mode ui.gameover to player controller
         ui.GameOver();
+    }
+
+    public void Alert(Vector3 pos, float range)
+    {
+        chasing = true;
+        agent.speed = runSpeed;
+        animator.SetFloat("Speed", 1);
+        agentTargetPosition = pos;
+        wonderCentre = pos;
+        wonderRange = range;
     }
 }

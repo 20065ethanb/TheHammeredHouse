@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Object : MonoBehaviour
 {
-    public List<GameObject> targets;
+    public List<TargetType> type;
 
     private AudioSource audioSource;
     public AudioClip useSound;
@@ -33,10 +33,11 @@ public class Object : MonoBehaviour
 
     public void Use(GameObject objectHit)
     {
-        if (objectHit.GetComponent<Target>() != null)
+        Target target = objectHit.GetComponent<Target>();
+        if (target != null)
         {
-            bool validUse = targets.Contains(objectHit);
-            objectHit.GetComponent<Target>().ObjectInteraction(validUse);
+            bool validUse = type.Contains(target.type);
+            target.ObjectInteraction(validUse);
             if (validUse)
             {
                 audioSource.clip = useSound;
