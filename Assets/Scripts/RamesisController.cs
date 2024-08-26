@@ -86,8 +86,7 @@ public class RamesisController : MonoBehaviour
                         animator.SetTrigger("Attack");
 
                         // Play sound
-                        audioSource.clip = scareSounds[Random.Range(0, scareSounds.Length)];
-                        audioSource.Play();
+                        audioSource.PlayOneShot(scareSounds[Random.Range(0, scareSounds.Length)]);
 
                         playerGameObject.GetComponent<PlayerController>().isAlive = false;
                     }
@@ -144,9 +143,7 @@ public class RamesisController : MonoBehaviour
                     agent.speed = 0;
                     animator.SetFloat("Speed", 0.0f);
                     if (wonderTimer < 0)
-                    {
                         agentTargetPosition = RandomPoint(transform.position, 5, false);
-                    }
                     else
                         wonderTimer -= Time.deltaTime;
                 }
@@ -156,12 +153,12 @@ public class RamesisController : MonoBehaviour
         foreach (GameObject door in doors)
         {
             float distanceToDoor = Vector3.Distance(transform.position, door.transform.position);
-            if (distanceToDoor < attackRange * 1.5f)
+            if (distanceToDoor < attackRange)
             {
                 if (!door.GetComponent<Door>().open)
                     door.GetComponent<Door>().Interact();
             }
-            else if (distanceToDoor < attackRange * 2)
+            else if (distanceToDoor < attackRange * 1.5f)
             {
                 if (door.GetComponent<Door>().open && !chasing)
                     door.GetComponent<Door>().Interact();
@@ -184,8 +181,7 @@ public class RamesisController : MonoBehaviour
             if (breathingTimer <= 0)
             {
                 // Play sound
-                audioSource.clip = breathingSound;
-                audioSource.Play();
+                audioSource.PlayOneShot(breathingSound);
                 breathingTimer = breathingTime;
             }
             else
@@ -251,5 +247,6 @@ public class RamesisController : MonoBehaviour
         agentTargetPosition = pos;
         wonderCentre = pos;
         wonderRange = range;
+        agent.SetDestination(agentTargetPosition);
     }
 }

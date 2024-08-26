@@ -59,16 +59,14 @@ public class PowerBox : MonoBehaviour
         {
             mainSwitchState = !mainSwitchState;
             // Play sound
-            audioSource.clip = mainSound;
-            audioSource.Play();
+            audioSource.PlayOneShot(mainSound);
         }
         else if (switches.Contains(s))
         {
             int i = switches.IndexOf(s);
             switchStates[i] = !switchStates[i];
             // Play sound
-            audioSource.clip = secondSound;
-            audioSource.Play();
+            audioSource.PlayOneShot(secondSound);
         }
     }
 }

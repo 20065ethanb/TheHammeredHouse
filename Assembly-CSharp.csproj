@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,6 +53,9 @@
     <UnityVersion>2021.2.10f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Assets\Scripts\PowerBox.cs" />
     <Compile Include="Assets\Scripts\VolumetricLineVertexData.cs" />
     <Compile Include="Assets\Scripts\Keypad.cs" />
@@ -60,17 +63,18 @@
     <Compile Include="Assets\Scripts\Object.cs" />
     <Compile Include="Assets\Scripts\UI.cs" />
     <Compile Include="Assets\Scripts\VolumetricLineStripBehavior.cs" />
+    <Compile Include="Assets\Scripts\Paper.cs" />
+    <Compile Include="Assets\Scripts\ItemSpwaner.cs" />
     <Compile Include="Assets\Scripts\KeypadButton.cs" />
     <Compile Include="Assets\Scripts\Door.cs" />
     <Compile Include="Assets\Scripts\Closet.cs" />
-    <Compile Include="Assets\Materials\PBR_Grass_Textures\Scripts\CameraFreeflight.cs" />
+    <Compile Include="Assets\Scripts\WaddlesController.cs" />
     <Compile Include="Assets\Scripts\Target.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Rope.cs" />
     <Compile Include="Assets\Scripts\VolumetricLineBehavior.cs" />
     <Compile Include="Assets\Scripts\TerrainDecorator.cs" />
     <Compile Include="Assets\Scripts\Inputs.cs" />
-    <Compile Include="Assets\Scripts\ItemSpwaner.cs" />
-    <Compile Include="Assets\Scripts\WaddlesController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -826,22 +830,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="HoudiniEngineUnity.csproj">
-      <Project>{7D5C1AE7-8718-8520-B16F-37E57BD3BDF8}</Project>
-      <Name>HoudiniEngineUnity</Name>
-    </ProjectReference>
-    <ProjectReference Include="HoudiniEngineUnity.VisualScripting.csproj">
-      <Project>{0ADA93B3-0893-C9CE-2737-13F59CE5524F}</Project>
-      <Name>HoudiniEngineUnity.VisualScripting</Name>
-    </ProjectReference>
-    <ProjectReference Include="HoudiniEngineUnityEditor.VisualScripting.csproj">
-      <Project>{014AC0AD-B3E3-C3B0-5CD2-1B2517922340}</Project>
-      <Name>HoudiniEngineUnityEditor.VisualScripting</Name>
-    </ProjectReference>
-    <ProjectReference Include="HoudiniEngineUnityEditor.csproj">
-      <Project>{41428657-EB9C-9775-6A9F-87C03D2EA4BF}</Project>
-      <Name>HoudiniEngineUnityEditor</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

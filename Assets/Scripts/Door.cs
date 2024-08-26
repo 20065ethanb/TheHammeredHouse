@@ -64,8 +64,7 @@ public class Door : MonoBehaviour
             // if the door is open disable the box collider
             boxCollider.enabled = !open;
             // Play sound
-            audioSource.clip = open ? openDoor : closeDoor;
-            audioSource.Play();
+            audioSource.PlayOneShot(open ? openDoor : closeDoor);
         }
     }
 

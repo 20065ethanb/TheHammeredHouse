@@ -25,9 +25,10 @@ public class UI : MonoBehaviour
     private GameObject playerGameObject;
 
     private GameObject ramesisGameObject;
+    private GameObject waddlesGameObject;
 
     private int difficultyValue = 1;
-    private TextMeshProUGUI difficultyText;
+    private TextMeshProUGUI difficultyText; 
     private GameObject difficultySlider;
 
 
@@ -49,6 +50,7 @@ public class UI : MonoBehaviour
         audioSource = playerGameObject.GetComponent<AudioSource>();
 
         ramesisGameObject = GameObject.Find("Ramesis");
+        waddlesGameObject = GameObject.Find("Waddles");
 
         difficultyText = startMenu.transform.Find("DifficultyText").gameObject.GetComponent<TextMeshProUGUI>();
         difficultySlider = startMenu.transform.Find("DifficultySlider").gameObject;
@@ -146,6 +148,10 @@ public class UI : MonoBehaviour
         // sets ramesis values
         ramesisGameObject.GetComponent<RamesisController>().walkSpeed *= Mathf.Pow(1.25f, difficultyValue);
         ramesisGameObject.GetComponent<RamesisController>().runSpeed *= Mathf.Pow(1.25f, difficultyValue);
+
+        // sets waddler values
+        waddlesGameObject.GetComponent<WaddlesController>().walkSpeed *= Mathf.Pow(1.25f, difficultyValue);
+        waddlesGameObject.GetComponent<WaddlesController>().runSpeed *= Mathf.Pow(1.25f, difficultyValue);
     }
 
     // Update is called once per frame

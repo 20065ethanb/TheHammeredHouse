@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class WaddlesController : MonoBehaviour
 {
-    public float walkSpeed = 3;
-    public float runSpeed = 5;
+    public float walkSpeed = 2;
+    public float runSpeed = 4;
 
     private float sightRange = 15;
 
@@ -22,13 +22,15 @@ public class WaddlesController : MonoBehaviour
     private GameObject playerGameObject;
     private GameObject ramesisGameObject;
     private NavMeshAgent agent;
-    //private Animator animator;
+    private Animator animator;
 
     private float agentUpdateTime = 0.2f;
     private float agentUpdateTimer = 0;
     private Vector3 agentTargetPosition;
 
-    //private AudioSource audioSource;
+    private AudioSource audioSource;
+    public AudioClip detectSound;
+    public AudioClip alertSound;
 
     // Start is called before the first frame update
     void Start()
@@ -40,9 +42,9 @@ public class WaddlesController : MonoBehaviour
         playerGameObject = GameObject.Find("PlayerCharacter");
         ramesisGameObject = GameObject.Find("Ramesis");
         agent = GetComponent<NavMeshAgent>();
-        //animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
 
-        //audioSource = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -63,26 +65,28 @@ public class WaddlesController : MonoBehaviour
             {
                 // snitch
                 agent.speed = 0;
-                //animator.SetFloat("Speed", 0);
+                animator.SetFloat("Speed", 0);
                 agentTargetPosition = transform.position;
                 ramesisGameObject.GetComponent<RamesisController>().Alert(spotPosition, spotRange);
+                audioSource.PlayOneShot(alertSound);
                 hasSnitched = true;
             }
             else
             {
                 // Run to ramesis
                 agent.speed = runSpeed;
-                //animator.SetFloat("Speed", 1);
+                animator.SetFloat("Speed", 1);
                 agentTargetPosition = ramesisGameObject.transform.position;
             }
         }
         else
         {
             agent.speed = walkSpeed;
-            //animator.SetFloat("Speed", 0.5f);
+            animator.SetFloat("Speed", 0.5f);
             if (CanSeePlayer())
             {
                 hasSnitched = false;
+                audioSource.PlayOneShot(detectSound);
             }
             else
             {
@@ -93,11 +97,9 @@ public class WaddlesController : MonoBehaviour
                 else
                 {
                     agent.speed = 0;
-                    //animator.SetFloat("Speed", 0.0f);
+                    animator.SetFloat("Speed", 0.0f);
                     if (wonderTimer < 0)
-                    {
                         agentTargetPosition = RandomPoint(Vector3.zero, 10, false);
-                    }
                     else
                         wonderTimer -= Time.deltaTime;
                 }

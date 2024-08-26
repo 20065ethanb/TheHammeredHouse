@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class KeypadButton : MonoBehaviour
 {
-    [Header("Value")]
-    [SerializeField] private string value;
-    [Header("Button Animation Settings")]
-    [SerializeField] private float bttnspeed = 0.1f;
-    [SerializeField] private float moveDist = 0.0025f;
-    [SerializeField] private float buttonPressedTime = 0.1f;
-    [Header("Component References")]
-    [SerializeField] private Keypad keypad;
+    public string value;
+
+    private float bttnspeed = 0.1f;
+    private float moveDist = 0.0025f;
+    private float buttonPressedTime = 0.1f;
+
+    private Keypad keypad;
+
+    void Start()
+    {
+        keypad = transform.parent.parent.GetComponentInParent<Keypad>();
+    }
 
 
     public void PressButton()

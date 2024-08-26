@@ -14,20 +14,16 @@ public class Target : MonoBehaviour
         canvas = GameObject.Find("Canvas");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void ObjectInteraction(bool valid)
     {
+        // Destroys target game objects
         if (valid)
         {
             Destroy(gameObject);
         }
         else
         {
+            // wrong tool
             canvas.GetComponent<UI>().flashMessage(incorrectToolMessage, 2.0f);
         }
     }
@@ -40,5 +36,6 @@ public enum TargetType
     Rock,
     Lock,
     Metal,
-    Glass
+    Glass,
+    Rope
 }

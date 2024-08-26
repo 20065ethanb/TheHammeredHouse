@@ -65,6 +65,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        // Getting componets
         controller = GetComponent<CharacterController>();
         input = GetComponent<Inputs>();
         playerInput = GetComponent<PlayerInput>();
@@ -123,6 +124,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Animations()
     {
+        // Plays animation if player is still alive
         if (isAlive)
         {
             Vector2 move = input.move;
@@ -195,7 +197,7 @@ public class PlayerController : MonoBehaviour
         // Move the player
         controller.Move(inputDirection.normalized * (speed * Time.deltaTime) + new Vector3(0.0f, verticalVelocity, 0.0f) * Time.deltaTime);
 
-        if (Vector3.Distance(transform.position, youWinPoint.transform.position) < reach)
+        if (Vector3.Distance(transform.position, youWinPoint.transform.position) < reach) // activate you win ui
         {
             ui.YouWin();
         }
@@ -208,6 +210,7 @@ public class PlayerController : MonoBehaviour
         bool use2 = input.use2;
 
         bool interact = input.interact;
+        bool valid = false;
 
         // Casts ray to see where the player is looking
         Ray ray = new(mainCamera.transform.position, mainCamera.transform.forward);
@@ -229,7 +232,7 @@ public class PlayerController : MonoBehaviour
                         }
                         else
                         {
-                            objectHit.GetComponent<Target>().ObjectInteraction(false);
+                            objectHit.GetComponent<Target>().ObjectInteraction(false); // Displays required tool
                         }
                     }
                 }
@@ -245,23 +248,28 @@ public class PlayerController : MonoBehaviour
                 {
                     if (objectHit.GetComponent<Object>() != null)
                     {
+                        // Drops object if already holding
+                        if (heldObject != null)
+                            heldObject.GetComponent<Object>().Dropped(); 
                         heldObject = objectHit;
-                        heldObject.GetComponent<Rigidbody>().useGravity = false;
                         heldObject.GetComponent<Object>().PickedUp();
                     }
                 }
 
-
-                if (objectHit.CompareTag("Switch"))
+                // Flip switch
+                if (objectHit.CompareTag("Switch")) 
                 {
                     objectHit.transform.parent.GetComponent<PowerBox>().flipSwitch(objectHit);
                 }
-
-                if (objectHit.GetComponent<KeypadButton>() != null)
+                // Interact with keypad
+                if (objectHit.GetComponent<KeypadButton>() != null) 
                 {
                     objectHit.GetComponent<KeypadButton>().PressButton();
                 }
             }
+
+            if (!objectHit.CompareTag("Untagged"))
+                valid = true;
 
             // closets
             if (objectHit.CompareTag("Closet"))
@@ -269,6 +277,12 @@ public class PlayerController : MonoBehaviour
                 ui.flashMessage("[E] to hide", 1);
                 if (interact)
                 {
+                    // drops any objects on enter
+                    if (heldObject != null) 
+                    {
+                        heldObject.GetComponent<Object>().Dropped();
+                        heldObject = null;
+                    }
                     currentCloset = objectHit;
                     currentCloset.GetComponent<Closet>().Interact();
                 }
@@ -283,7 +297,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // call ui to set corsshair
-        ui.crosshair(cast);
+        ui.crosshair(valid);
     }
 
     private void Keybinds()
@@ -295,16 +309,17 @@ public class PlayerController : MonoBehaviour
             // Drops an object
             if (heldObject != null)
             {
-                heldObject.GetComponent<Rigidbody>().useGravity = true;
                 heldObject.GetComponent<Object>().Dropped();
                 heldObject = null;
             }
         }
 
-        bool speedTime = input.timeSpeed;
-        Time.timeScale = speedTime ? 10.0f : 1.0f;
+        // speeds up game 
+        // bool speedTime = input.timeSpeed;
+        // Time.timeScale = speedTime ? 10.0f : 1.0f;
     }
 
+    // Allows player to exits closets
     private void Closets()
     {
         bool close = input.close;
@@ -313,7 +328,8 @@ public class PlayerController : MonoBehaviour
         {
             transform.position = currentCloset.GetComponent<Closet>().insidePosition.position;
             ui.flashMessage("[Q] to exit", 1);
-            if (close)
+            // Teleports player out
+            if (close) 
             {
                 currentCloset.GetComponent<Closet>().Interact();
                 transform.position = currentCloset.GetComponent<Closet>().outsidePosition.position;
@@ -359,16 +375,17 @@ public class PlayerController : MonoBehaviour
 
     private void ObjectPositioning()
     {
-        // Positions the held object to infront of the player in to the right
+        // Positions the held object to infront of the player and to the right
         if (heldObject != null)
         {
-            Vector3 objectPosition = mainCamera.transform.position + ((mainCamera.transform.forward + mainCamera.transform.right) * 0.5f) - (mainCamera.transform.up * 0.25f);
-            heldObject.transform.position = objectPosition;
+            Vector3 objectPosition = mainCamera.transform.position + ((mainCamera.transform.forward + mainCamera.transform.right) * 0.225f) - (mainCamera.transform.up * 0.125f);
+            heldObject.transform.position = Vector3.MoveTowards(heldObject.transform.position, objectPosition, Time.deltaTime * 10);
             heldObject.transform.rotation = mainCamera.transform.rotation;
-            heldObject.GetComponent<Rigidbody>().useGravity = false;
+            heldObject.transform.localScale = Vector3.MoveTowards(heldObject.transform.localScale, Vector3.one * 0.5f, Time.deltaTime * 10);
         }
     }
 
+    // Limits camera movment
     private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
     {
         if (lfAngle < -360f) lfAngle += 360f;
