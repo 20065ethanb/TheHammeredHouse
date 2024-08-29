@@ -9,6 +9,7 @@ public class ItemSpwaner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // gets item list
         List<GameObject> allItems = new List<GameObject>(items);
         List<Transform> allSpawns = new List<Transform>(transform.Find("SpawnPositions").GetComponentsInChildren<Transform>());
 

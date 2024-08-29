@@ -14,10 +14,14 @@ public class UI : MonoBehaviour
     private AudioSource audioSource;
 
     private GameObject startMenu;
+    private GameObject controls;
     private GameObject gameUI;
     private GameObject gameOverMenu;
     private GameObject youWinScreen;
-    private GameObject controls;
+
+    private GameObject startCamera;
+    private GameObject controlsCamera;
+    private GameObject mainCamera;
 
     private GameObject staminaBar;
     private GameObject crosshairOn;
@@ -37,10 +41,15 @@ public class UI : MonoBehaviour
     {
         // Get objects
         startMenu = transform.Find("StartMenu").gameObject;
+        controls = transform.Find("Controls").gameObject;
         gameUI = transform.Find("GameUI").gameObject;
         gameOverMenu = transform.Find("GameOverMenu").gameObject;
         youWinScreen = transform.Find("YouWinScreen").gameObject;
-        controls = transform.Find("Controls").gameObject;
+
+        Transform cameras = GameObject.Find("Cameras").transform;
+        startCamera = cameras.Find("StartCamera").gameObject;
+        controlsCamera = cameras.Find("ControlsCamera").gameObject;
+        mainCamera = cameras.Find("MainCamera").gameObject;
 
         staminaBar = gameUI.transform.Find("Stamina Bar").gameObject;
         crosshairOn = gameUI.transform.Find("Crosshair_On").gameObject;
@@ -81,12 +90,19 @@ public class UI : MonoBehaviour
         gameOverMenu.SetActive(false);
         youWinScreen.SetActive(false);
         controls.SetActive(false);
+
+        startCamera.SetActive(true);
+        controlsCamera.SetActive(false);
+        mainCamera.SetActive(false);
     }
 
     public void Controls()
     {
         startMenu.SetActive(false);
         controls.SetActive(true);
+
+        startCamera.SetActive(false);
+        controlsCamera.SetActive(true);
     }
 
     public void UpdateSlider()
@@ -127,6 +143,10 @@ public class UI : MonoBehaviour
         // Hides menu
         startMenu.SetActive(false);
         gameUI.SetActive(true);
+
+        startCamera.SetActive(false);
+        mainCamera.SetActive(true);
+
         // Enables time
         Time.timeScale = 1f;
         // Enables inputs
@@ -157,8 +177,10 @@ public class UI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Set stamina bar
         staminaBar.GetComponent<Slider>().value = playerGameObject.GetComponent<PlayerController>().stamina;
 
+        // Tells messgae when it needs to disappear
         if (messageTime > 0)
         {
             messageTime -= Time.deltaTime;
@@ -170,6 +192,7 @@ public class UI : MonoBehaviour
         }
     }
 
+    // Flashs messages
     public void flashMessage(string message, float showTime)
     {
         messageText.GetComponent<TextMeshProUGUI>().text = message;
@@ -177,6 +200,7 @@ public class UI : MonoBehaviour
         messageTime = showTime;
     }
 
+    // Sets croshair
     public void crosshair(bool on)
     {
         crosshairOn.SetActive(on);
@@ -214,5 +238,10 @@ public class UI : MonoBehaviour
         // Disable inputs
         playerGameObject.GetComponent<Inputs>().SetCursorState(false);
         playerGameObject.GetComponent<PlayerController>().enabled = false;
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

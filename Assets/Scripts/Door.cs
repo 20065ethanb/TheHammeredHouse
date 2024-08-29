@@ -29,6 +29,7 @@ public class Door : MonoBehaviour
 
     void Update()
     {
+        // Door rotaion
         Quaternion doorRotation = Quaternion.Euler(0, open ? DoorOpenAngle : DoorCloseAngle, 0);
         transform.localRotation = Quaternion.Slerp(transform.localRotation, doorRotation, Time.deltaTime * 5 * smooth);
     }
@@ -68,6 +69,7 @@ public class Door : MonoBehaviour
         }
     }
 
+    // Checks if door is locked
     private void CheckLocks()
     {
         // Removes empty spaces from the locks list

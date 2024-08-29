@@ -28,6 +28,7 @@ public class PowerBox : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
 
+        // Sets vaules for mini switchs
         while (switchStates.Count < switches.Count)
         {
             switchStates.Add(Random.value > 0.5f);
@@ -37,9 +38,11 @@ public class PowerBox : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // rotates main switch
         Quaternion mainSwitchRotation = Quaternion.Euler(mainSwitchState ? mainLeverOnAngle : mainLeverOffAngle, 0, 0);
         mainSwitch.transform.GetChild(0).localRotation = Quaternion.Slerp(mainSwitch.transform.GetChild(0).localRotation, mainSwitchRotation, Time.deltaTime * 5 * smooth);
 
+        // Slides switchs
         for (int i = 0; i < switches.Count; i++)
         {
             GameObject slider = switches[i].transform.GetChild(0).gameObject;
@@ -47,12 +50,14 @@ public class PowerBox : MonoBehaviour
             slider.transform.localPosition = Vector3.MoveTowards(slider.transform.localPosition, sliderPos, Time.deltaTime * 2 * smooth);
         }
 
+        // Turns off lazer at front door once switched of
         for (int i = 0; i < lasers.Count; i++)
         {
             lasers[i].SetActive(mainSwitchState);
         }
     }
 
+    // Flip switch
     public void flipSwitch(GameObject s)
     {
         if (s.Equals(mainSwitch))

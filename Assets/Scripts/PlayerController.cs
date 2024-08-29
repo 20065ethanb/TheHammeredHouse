@@ -25,8 +25,6 @@ public class PlayerController : MonoBehaviour
     public float topClamp = 70.0f;
     public float bottomClamp = -30.0f;
 
-    public float standingPosition = 1.375f;
-
     public bool isAlive = true;
 
     public GameObject ramesisTarget;
@@ -51,9 +49,9 @@ public class PlayerController : MonoBehaviour
     private const float threshold = 0.01f;
     private const float speedOffset = 0.1f;
 
-    public GameObject currentCloset;
+    private GameObject currentCloset;
 
-    public GameObject youWinPoint;
+    public Transform[] winPoints;
 
     private bool IsCurrentDeviceMouse
     {
@@ -79,6 +77,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        // Functions
         GroundedCheck();
         Gravity();
         Animations();
@@ -197,9 +196,11 @@ public class PlayerController : MonoBehaviour
         // Move the player
         controller.Move(inputDirection.normalized * (speed * Time.deltaTime) + new Vector3(0.0f, verticalVelocity, 0.0f) * Time.deltaTime);
 
-        if (Vector3.Distance(transform.position, youWinPoint.transform.position) < reach) // activate you win ui
+        // if the player is close to a win point then the player wins
+        foreach (Transform winPoint in winPoints)
         {
-            ui.YouWin();
+            if (Vector3.Distance(transform.position, winPoint.position) < reach)
+                ui.YouWin();
         }
     }
 

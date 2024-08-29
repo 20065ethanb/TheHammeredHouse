@@ -79,7 +79,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0200000005000000
-  useSound: {fileID: 8300000, guid: ef370672c9b9c4fbdae838bbd2d7175a, type: 3}
+  useSound: {fileID: 8300000, guid: 7e40dc209fc8496488ce1abdc03288a0, type: 3}
 --- !u!82 &1748431843940882302
 AudioSource:
   m_ObjectHideFlags: 0

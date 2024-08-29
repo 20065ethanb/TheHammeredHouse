@@ -24,10 +24,12 @@ public class Inputs : MonoBehaviour
 	private InputAction _interactAction;
 	private InputAction _closeAction;
 
+	// Keeps track of input type
 	[Header("Movement Settings")]
 	[SerializeField]
 	private bool analogMovement;
 
+	// Lock mouse
 	[Header("Mouse Cursor Settings")]
 	[SerializeField]
 	private bool cursorLocked = true;
@@ -36,6 +38,7 @@ public class Inputs : MonoBehaviour
 
     private void Start()
     {
+		// Find action
 		_playerInput = GetComponent<PlayerInput>();
 
 		_moveAction = _playerInput.actions["Move"];
@@ -51,6 +54,7 @@ public class Inputs : MonoBehaviour
 
     private void Update()
     {
+		// Getting action
 		move = _moveAction.ReadValue<Vector2>();
 		look = _lookAction.ReadValue<Vector2>();
 		use1 = _use1Action.WasPressedThisFrame();
@@ -62,16 +66,19 @@ public class Inputs : MonoBehaviour
 		close = _closeAction.IsPressed();
     }
 
+	// Give varible vaule
 	public bool IsAnalog()
     {
 		return analogMovement;
     }
 
+	// Sets cursor state
 	private void OnApplicationFocus(bool hasFocus)
 	{
 		SetCursorState(cursorLocked);
 	}
 
+	// Locks or unlocks cursor state
 	public void SetCursorState(bool newState)
 	{
 		Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
